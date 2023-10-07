@@ -4,15 +4,17 @@
   import { LeafletMap, TileLayer, Marker, Tooltip, DivIcon } from 'svelte-leafletjs';
   import 'leaflet/dist/leaflet.css';
 
+  import { Fancybox } from '@fancyapps/ui';
+  import '@fancyapps/ui/dist/fancybox/fancybox.css';
+
   import { sensors, updateSensor } from '../../stores/terrariumpi';
   import { fetchSensors, fetchWebcamArchive } from '../../providers/api';
   import { getCustomConfig } from '../../config';
   import { roundToPrecision } from '../../helpers/number-helpers';
   import { ApiUrl } from '../../constants/urls';
+  import { fancyAppsLanguage } from '../../constants/ui';
   import { errorNotification } from '../../providers/notification-provider';
-
-  import { Fancybox } from '@fancyapps/ui';
-  import '@fancyapps/ui/dist/fancybox.css';
+  import LoadingModal from '../../modals/LoadingModal.svelte';
 
   import L from 'leaflet';
   import 'leaflet-fullscreen';
@@ -243,6 +245,7 @@
     }
   }
 
+  let webcamArchiveLoadingModal = null;
   const webcamArchive = () => {
     let image_archive = [];
     let counter = 0;
@@ -260,22 +263,25 @@
           image_archive = [
             ...image_archive,
             ...data.archive_images.map((image) => {
+              let image_date = new Date(image.slice(-14, -4) * 1000);
               return {
                 src: `${ApiUrl}/${image.slice(1)}`,
                 thumb: `${ApiUrl}/${image.slice(1)}`,
                 type: 'image',
-                caption:
-                  $date(new Date(image.slice(-14, -4) * 1000), { format: 'full' }) +
-                  ' ' +
-                  $time(new Date(image.slice(-14, -4) * 1000), { format: 'medium' }),
+                caption: $date(image_date, { format: 'full' }) + ' ' + $time(image_date, { format: 'medium' }),
               };
             }),
           ];
 
+          webcamArchiveLoadingModal.setMessage($_('webcams.archive.modal.loading.status', { default: 'Currently loaded {total} images ... ({percentage}%)', values: { total: image_archive.length, percentage: (counter/10)*100 } }));
+
           if (counter++ < 10) {
             loadImages(new Date(archive_date.getTime() - 24 * 60 * 60 * 1000));
           } else if (image_archive.length > 0) {
-            new Fancybox(image_archive);
+            new Fancybox(image_archive, {
+                 l10n: fancyAppsLanguage(),
+            });
+            webcamArchiveLoadingModal.hide();
           } else {
             errorNotification($_('webcams.archive.no_images', { default: 'No archive images available' }));
           }
@@ -283,6 +289,9 @@
       );
     }
 
+    // Open loading modal
+    webcamArchiveLoadingModal.setMessage($_('webcams.archive.modal.loading.title', { default: 'Starting loading webcam archive images ...' }));
+    webcamArchiveLoadingModal.show();
     loadImages();
   };
 
@@ -290,7 +299,7 @@
     map.getMap().addControl(new ExtraWebcamControls());
 
     if (webcam.is_live) {
-      let hls_url = webcam.hardware.indexOf('remote') != -1 ? webcam.address : `${ApiUrl}/webcam/${webcam.id}/stream.m3u8`;
+      let hls_url = webcam.hardware.indexOf('remote') !== -1 ? webcam.address : `${ApiUrl}/webcam/${webcam.id}/stream.m3u8`;
       L.videoOverlay(
         hls_url,
         L.latLngBounds([
@@ -367,7 +376,7 @@
         {:else}
           <Tooltip options="{{ ...toolTipOptions, ...{ direction: marker.long > 0 ? 'right' : 'left' } }}">
             {#each marker.sensors as sensor_id, counter}
-              {#if counter == 0}
+              {#if counter === 0}
                 <strong>{$sensors[sensor_id].name}</strong>
               {/if}
               {#if $sensors[sensor_id]}
@@ -382,6 +391,9 @@
     {/each}
   {/if}
 </LeafletMap>
+
+<svelte:options accessors/>
+<LoadingModal bind:this="{webcamArchiveLoadingModal}" />
 
 <style>
   strong {

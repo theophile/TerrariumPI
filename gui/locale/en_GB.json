@@ -30,6 +30,12 @@
         "label": "Enclosure",
         "placeholder": "Select enclosure"
       },
+      "light_sensors": {
+        "help": "Select the lights sensors to detect if the lights are on.",
+        "invalid": "Please make a choice.",
+        "label": "Light detecting sensors",
+        "placeholder": "Select light sensors"
+      },
       "mode": {
         "help": "Select the mode of this area. This will change the timing and duration of the relays.",
         "invalid": "Please make a choice.",
@@ -49,6 +55,12 @@
         "invalid": "The entered name is not valid. It cannot be empty.",
         "label": "Name",
         "placeholder": "Enter a name"
+      },
+      "relay": {
+        "slider": {
+          "delay": "Delay: {delay} minutes.",
+          "duration": "Delay: {delay} minutes. Duration: {duration} minutes"
+        }
       },
       "save": {
         "error": {
@@ -76,6 +88,17 @@
           },
           "placeholder": "Select a day/night source"
         },
+        "depend_on_relays_mode": {
+          "all": {
+            "label": "All on"
+          },
+          "none": {
+            "label": "None on"
+          },
+          "one": {
+            "label": "At least one on"
+          }
+        },
         "deviation_high_alarm": {
           "help": "Increase of decrease high alarm value.",
           "invalid": "Enter a valid number.",
@@ -94,6 +117,18 @@
             "invalid": "Enter a valid time.",
             "label": "Begin time",
             "placeholder": "Enter begin time"
+          },
+          "depend_on_relays": {
+            "help": "Select the relays of which these relays are depending on.",
+            "invalid": "Please make a choice.",
+            "label": "Depend on relays",
+            "placeholder": "Select relays"
+          },
+          "depend_on_relays_mode": {
+            "help": "Select depending mode",
+            "invalid": "Please make a choice.",
+            "label": "Depend mode",
+            "placeholder": "Select a mode"
           },
           "door_status": {
             "help": "Select the door status.",
@@ -200,6 +235,18 @@
             "invalid": "Enter a valid time.",
             "label": "Begin time",
             "placeholder": "Enter begin time"
+          },
+          "depend_on_relays": {
+            "help": "Select the relays of which these relays are depending on.",
+            "invalid": "Please make a choice.",
+            "label": "Depend on relays",
+            "placeholder": "Select relays"
+          },
+          "depend_on_relays_mode": {
+            "help": "Select depending mode",
+            "invalid": "Please make a choice.",
+            "label": "Depend mode",
+            "placeholder": "Select a mode"
           },
           "door_status": {
             "help": "Select the door status.",
@@ -421,6 +468,11 @@
           "ok": {
             "message": "Uploaded {amount, plural, =1 {# audio file} other {# audio files}}"
           }
+        },
+        "upload": {
+          "error": {
+            "nologin": "Please login to upload files."
+          }
         }
       },
       "title": "Audio files"
@@ -480,6 +532,7 @@
         },
         "title": "Playlist settings",
         "volume": {
+          "formatter": "Audio volume level: {value}",
           "help": "Select the volume for this playlist.",
           "label": "Audio volume"
         }
@@ -893,7 +946,7 @@
         "placeholder": "Enter a message"
       },
       "placeholders": {
-        "format": "Number values can be rounded using the {link_start}`.:2f` format{link_end}",
+        "format": "Use {placeholder} format to use a placeholder below in your message.{new_line}Number values can be rounded using the {link_start}`.:2f` format{link_end}",
         "help": "List of available placeholders.",
         "label": "Place holders"
       },
@@ -938,6 +991,9 @@
   },
   "modal": {
     "confirm": {
+      "docker": {
+        "not_available": "This feature is not possible in a Docker setup."
+      },
       "relays": {
         "scan": "This will start a new scan to find new relays. This can take up to 30 seconds."
       },
@@ -963,6 +1019,9 @@
     "general": {
       "close": "Close",
       "save": "Save"
+    },
+    "loading": {
+      "title": "Loading"
     },
     "login": {
       "error": "Invalid login",
@@ -1260,6 +1319,11 @@
       "uvb": "Average UVB",
       "uvi": "Average UV Index"
     },
+    "calibration": {
+      "light_on_off_threshold": {
+        "light_bulb": "Light on of threshold value: {threshold}"
+      }
+    },
     "co2": {
       "menu": {
         "title": "CO2"
@@ -1375,6 +1439,11 @@
           "help": "Enter the minimum moist value.",
           "invalid": "The entered value is not valid. It needs to be number higher then {min}.",
           "label": "Minimum moist value"
+        },
+        "light_threshold": {
+          "help": "Enter the value when considered the lights are on.",
+          "invalid": "The entered value is not valid. It needs to be number higher then {min}.",
+          "label": "Lights on threshold"
         },
         "offset": {
           "help": "Enter offset for this sensor.",
@@ -1886,6 +1955,12 @@
       "settings": "Edit webcam"
     },
     "archive": {
+      "modal": {
+        "loading": {
+          "status": "Currently loaded {total} images ... ({percentage}%)",
+          "title": "Starting loading webcam archive images ..."
+        }
+      },
       "no_images": "No archive images available"
     },
     "confirm": {

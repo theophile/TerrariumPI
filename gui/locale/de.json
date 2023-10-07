@@ -8,7 +8,7 @@
   "areas": {
     "delete": {
       "confirm": {
-        "message": "Bist du sicher, dass du den Bereich ''{name}'' löschen möchtest?"
+        "message": "Sind Sie sicher, dass du den Bereich ''{name}'' löschen möchtest?"
       },
       "error": {
         "message": "Der Bereich ''{name}'' konnte nicht gelöscht werden!\nFehler: {error}"
@@ -25,10 +25,16 @@
         "placeholder": "Wähle abhängige Bereiche"
       },
       "enclosure": {
-        "help": "Wähle das Terrarium aus, zu dem dieser Bereich gehört.",
+        "help": "Wählen Sie das Gehäuse, zu dem dieser Bereich gehört.",
         "invalid": "Bitte triff eine Wahl.",
-        "label": "Terrarium",
-        "placeholder": "Wähle ein Terrarium"
+        "label": "Gehäuse",
+        "placeholder": "Wähle ein Gehäuse"
+      },
+      "light_sensors": {
+        "help": "Wählen Sie die Lichtsensoren, um zu erkennen, ob das Licht eingeschaltet ist.",
+        "invalid": "Bitte treffen Sie eine Wahl.",
+        "label": "Lichterkennungssensoren",
+        "placeholder": "Lichtsensoren auswählen"
       },
       "mode": {
         "help": "Wähle den Modus dieses Bereichs. Das ändert Schaltzeit- und dauer der Relais.",
@@ -49,6 +55,12 @@
         "invalid": "Der eingegebene Name ist nicht gültig. Er kann nicht leer sein.",
         "label": "Name",
         "placeholder": "Gib einen Namen ein"
+      },
+      "relay": {
+        "slider": {
+          "delay": "Verzögerung: {delay} Minuten.",
+          "duration": "Verzögerung: {delay} Minuten. Dauer: {duration} Minuten"
+        }
       },
       "save": {
         "error": {
@@ -76,6 +88,17 @@
           },
           "placeholder": "Wähle eine Tag/Nacht-Quelle"
         },
+        "depend_on_relays_mode": {
+          "all": {
+            "label": ""
+          },
+          "none": {
+            "label": ""
+          },
+          "one": {
+            "label": ""
+          }
+        },
         "deviation_high_alarm": {
           "help": "Erhöhung des oberen Alarmwerts.",
           "invalid": "Gib eine gültige Zahl ein.",
@@ -94,6 +117,18 @@
             "invalid": "Gib eine gültige Zeit ein.",
             "label": "Start",
             "placeholder": "Gib eine Startzeit ein"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Wähle den Türstatus aus.",
@@ -200,6 +235,18 @@
             "invalid": "Gib eine gültige Zeit ein.",
             "label": "Start",
             "placeholder": "Gib eine Startzeit ein"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Wähle den Türstatus aus.",
@@ -421,6 +468,11 @@
           "ok": {
             "message": "Hochgeladen {amount, plural, =1 {# Audiodatei} other {# Audiodateien}}"
           }
+        },
+        "upload": {
+          "error": {
+            "nologin": "Einloggen um Dateien hochzuladen."
+          }
         }
       },
       "title": "Audiodateien"
@@ -480,6 +532,7 @@
         },
         "title": "Playlist-Einstellungen",
         "volume": {
+          "formatter": "Audio-Lautstärkepegel {value}",
           "help": "Wähle die Lautstärke für diese Playlist aus.",
           "label": "Audio Lautstärke"
         }
@@ -893,7 +946,7 @@
         "placeholder": "Nachricht eingeben"
       },
       "placeholders": {
-        "format": "Zahlenwerte können mit dem Format {link_start}`.:2f` gerundet werden{link_end}",
+        "format": "Verwenden Sie das Format {placeholder}, um einen Platzhalter unten in Ihrer Nachricht zu verwenden.{new_line}Zahlenwerte können mit dem Format {link_start}`.:2f` gerundet werden{link_end}",
         "help": "Liste von verfügbaren Platzhaltern.",
         "label": "Platzhalter"
       },
@@ -938,6 +991,9 @@
   },
   "modal": {
     "confirm": {
+      "docker": {
+        "not_available": "Diese Funktion ist in einem Docker-Setup nicht möglich."
+      },
       "relays": {
         "scan": "Dies startet einen neuen Scan, um neue Relais zu finden. Dies kann bis zu 30 Sekunden dauern."
       },
@@ -963,6 +1019,9 @@
     "general": {
       "close": "Schließen",
       "save": "Speichern"
+    },
+    "loading": {
+      "title": "Wird geladen"
     },
     "login": {
       "error": "Ungültiger Login",
@@ -1260,6 +1319,11 @@
       "uvb": "Durchschnittliches UVB",
       "uvi": "Durchschnittlicher UV -Index"
     },
+    "calibration": {
+      "light_on_off_threshold": {
+        "light_bulb": "Einschalten des Schwellenwerts: {Schwellenwert}"
+      }
+    },
     "co2": {
       "menu": {
         "title": "CO2"
@@ -1268,12 +1332,12 @@
     },
     "confirm": {
       "ignore": {
-        "message": "Bist du sicher, dass du den Sensor ''{name}'' ignorieren möchtest?"
+        "message": "Sind Sie sicher, dass du den Sensor ''{name}'' ignorieren möchtest?"
       }
     },
     "delete": {
       "confirm": {
-        "message": "Bist du sicher, dass du den Sensor ''{name}'' löschen möchtest?"
+        "message": "Sind Sie sicher, dass du den Sensor ''{name}'' löschen möchtest?"
       },
       "error": {
         "message": "Der Sensor ''{name}'' konnte nicht gelöscht werden!\nFehler: {error}"
@@ -1375,6 +1439,11 @@
           "help": "Gib den minimalen Feuchtigkeitswert ein.",
           "invalid": "Der eingegebene Wert ist nicht gültig. Es muss ein Wert höher sein als {min}.",
           "label": "Mindestfeuchtewert"
+        },
+        "light_threshold": {
+          "help": "Geben Sie den Wert ein, wenn die Lichter eingeschaltet sind.",
+          "invalid": "Der eingegebene Wert ist nicht gültig. Er muss eine höhere Zahl als {min} sein.",
+          "label": "Schwelle für \"Licht an\""
         },
         "offset": {
           "help": "Abweichung für diesen Sensor eingeben.",
@@ -1886,6 +1955,12 @@
       "settings": "Webcam bearbeiten"
     },
     "archive": {
+      "modal": {
+        "loading": {
+          "status": "Derzeit geladene {total} Bilder ... ({percentage}%)",
+          "title": "Das Laden der Webcam-Archivbilder beginnt ..."
+        }
+      },
       "no_images": "Keine Archivbilder verfügbar"
     },
     "confirm": {

@@ -8,7 +8,7 @@
 
   import { setCustomPageTitle, customPageTitleUsed } from '../stores/page-title';
   import { successNotification, errorNotification } from '../providers/notification-provider';
-  import { formToJSON } from '../helpers/form-helpers';
+  import { formToJSON, invalid_form_fields } from '../helpers/form-helpers';
   import { languageFlag } from '../helpers/string-helpers';
   import { fetchSystemSettings, updateSystemSettings, uploadFile } from '../providers/api';
   import { changeLang, languages, currencies, currency } from '../locale/i18n';
@@ -46,10 +46,10 @@
     ],
   };
 
-  const { form, setFields, isSubmitting } = createForm({
+  const { form, setFields, isSubmitting, reset } = createForm({
     onSubmit: async (values, context) => {
       // Extra check on the password
-      if (values.password != '' && values.password2 != '' && values.password != values.password2) {
+      if (values.password !== '' && values.password2 !== '' && values.password !== values.password2) {
         context.form.elements['password2'].setCustomValidity('dummy');
       } else {
         // Reset error
@@ -80,7 +80,7 @@
         delete values.file_profile_image;
         // TODO: Fix this. We need to convert to string, so that backend settings will work.... not handy or nice
         Object.keys(values).forEach((key) => {
-          if (key == 'exclude_ids') {
+          if (key === 'exclude_ids') {
             values[key] = values[key].join(',');
           } else {
             values[key] = values[key] + '';
@@ -102,6 +102,10 @@
         }
         loading = false;
         validated = false;
+      } else {
+        let error_message = $_('webcams.settings.save.error.required_fields', { default: 'Not all required fields are entered correctly.' });
+        error_message += "\n'" + invalid_form_fields(editForm).join("'\n'") + "'";
+        errorNotification(error_message, $_('notification.form.save.error.title', { default: 'Save Error' }));
       }
     },
   });
@@ -120,20 +124,31 @@
           // TODO: Fix json data to real true and false values
           $formData[field.id] = $formData[field.id] === 'true' ? true : $formData[field.id] === 'false' ? false : $formData[field.id];
 
-          if (field.id == 'exclude_ids') {
+          if (field.id === 'exclude_ids') {
             excluded_ids = $formData[field.id].map((item) => {
               return { value: item.id, text: item.name };
             });
             $formData[field.id] = $formData[field.id].map((item) => {
               return item.id;
             });
+          } else if (field.id === 'language') {
+            $formData[field.id] = $formData[field.id].replace(/_/gm,'-');
+          } else if (field.id === 'always_authenticate' && ($formData[field.id] === true || $formData[field.id] === false)) {
+            $formData[field.id] = $formData[field.id] ? 1 : 0
           }
         }
+        setFields($formData);
+        loading = false;
       });
-
-      setFields($formData);
-      loading = false;
     })();
+
+    // Reset form validation
+    reset();
+    $formData = formToJSON(editForm);
+    validated = false;
+
+    // Toggle loading div
+    loading = true;
 
     setCustomPageTitle($_('system.settings.page.title', { default: 'System settings' }));
     editForm.setAttribute('novalidate', 'novalidate');

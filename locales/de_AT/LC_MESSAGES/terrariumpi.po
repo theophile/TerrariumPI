@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-12-27 11:26+CET\n"
+"POT-Creation-Date: 2023-06-02 22:35+CEST\n"
 "PO-Revision-Date: 2022-09-11 11:04+0000\n"
 "Last-Translator: theyosh <github.com@theyosh.nl>\n"
 "Language-Team: German (Austria) <https://weblate.theyosh.nl/projects/"
@@ -152,51 +152,51 @@ msgstr "Leistung"
 msgid "powerusage"
 msgstr "Pi Stromverbrauch"
 
-#: terrariumEngine.py:1183
+#: terrariumEngine.py:1187
 msgid "Up time"
 msgstr "Betriebszeit"
 
-#: terrariumEngine.py:1189
+#: terrariumEngine.py:1193
 msgid "System load"
 msgstr "Systemlast"
 
-#: terrariumEngine.py:1195
+#: terrariumEngine.py:1199
 msgid "CPU Temperature"
 msgstr "CPU Temperatur"
 
-#: terrariumEngine.py:1201
+#: terrariumEngine.py:1205
 msgid "Storage"
 msgstr "Speicher"
 
-#: terrariumEngine.py:1207
+#: terrariumEngine.py:1211
 msgid "Memory"
 msgstr "Speicher"
 
-#: terrariumEngine.py:1228
+#: terrariumEngine.py:1232
 msgid "average {sensor_type}"
 msgstr "Durchschnitt {sensor_type}"
 
-#: terrariumEngine.py:1312
+#: terrariumEngine.py:1316
 msgid "Version"
 msgstr "Version"
 
-#: terrariumEngine.py:1322 terrariumWebserver.py:394
+#: terrariumEngine.py:1326 terrariumWebserver.py:393
 msgid "A new version ({version}) is available!"
 msgstr ""
 
-#: terrariumEngine.py:1366 terrariumEngine.py:1396
+#: terrariumEngine.py:1370 terrariumEngine.py:1400
 #, fuzzy
 #| msgid "Current activity"
 msgid "Current active relays"
 msgstr "Aktuelle Tätigkeit"
 
-#: terrariumEngine.py:1367
+#: terrariumEngine.py:1371
 #, fuzzy
 #| msgid "Wattage"
 msgid "Watt"
 msgstr "Leistung"
 
-#: terrariumEngine.py:1405
+#: terrariumEngine.py:1409
 msgid "last update"
 msgstr "Letztes Update"
 
@@ -502,53 +502,81 @@ msgstr "Schalter Einstellungen"
 msgid "Webcam archive"
 msgstr "Archivierung auswählen"
 
-#: terrariumNotification.py:428
+#: terrariumNotification.py:222
+msgid "Lights area wrong state"
+msgstr ""
+
+#: terrariumNotification.py:224
+#, fuzzy
+#| msgid "Pi power usage"
+msgid "Current power state"
+msgstr "Pi Stromverbrauch"
+
+#: terrariumNotification.py:225
+#, fuzzy
+#| msgid "Your changes are saved"
+msgid "Sensor measure state"
+msgstr "Ihre Änderungen wurden gespeichert"
+
+#: terrariumNotification.py:226
+#, fuzzy
+#| msgid "Enclosure"
+msgid "Enclosure name"
+msgstr "Anlage"
+
+#: terrariumNotification.py:227
+#, fuzzy
+#| msgid "Enclosure settings"
+msgid "Enclosure running mode"
+msgstr "Anlage Einstellungen"
+
+#: terrariumNotification.py:441
 msgid "Display"
 msgstr "Anzeige"
 
-#: terrariumNotification.py:432
+#: terrariumNotification.py:445
 msgid "Email"
 msgstr "Email"
 
-#: terrariumNotification.py:442
+#: terrariumNotification.py:455
 msgid "Traffic light"
 msgstr "Ampel"
 
-#: terrariumNotification.py:446
+#: terrariumNotification.py:459
 msgid "Web-hook"
 msgstr "Webhook"
 
-#: terrariumNotification.py:450
+#: terrariumNotification.py:463
 msgid "MQTT"
 msgstr ""
 
-#: terrariumNotification.py:454
+#: terrariumNotification.py:467
 msgid "Pushover"
 msgstr "Überzieher"
 
-#: terrariumNotification.py:458
+#: terrariumNotification.py:471
 msgid "Buzzer"
 msgstr ""
 
-#: terrariumWebserver.py:165 terrariumWebserver.py:254
+#: terrariumWebserver.py:165 terrariumWebserver.py:253
 msgid "Authenticate to make any changes"
 msgstr "Authentifizieren, um Änderungen vorzunehmen"
 
-#: terrariumWebserver.py:165 terrariumWebserver.py:254
+#: terrariumWebserver.py:165 terrariumWebserver.py:253
 msgid "Authentication"
 msgstr "Authentifizierung"
 
-#: terrariumWebserver.py:165 terrariumWebserver.py:254
+#: terrariumWebserver.py:165 terrariumWebserver.py:253
 msgid "TerrariumPI"
 msgstr "TerrariumPI"
 
-#: terrariumWebserver.py:394
+#: terrariumWebserver.py:393
 #, fuzzy
 #| msgid "Sensor ph"
 msgid "Software Update"
 msgstr "Sensor pH"
 
-#: terrariumNotification.py:437
+#: terrariumNotification.py:450
 msgid "Telegram"
 msgstr "Telegramm"
 
@@ -815,9 +843,6 @@ msgstr "Telegramm"
 
 #~ msgid "Area settings"
 #~ msgstr "Bereich Einstellungen"
-
-#~ msgid "Enclosure"
-#~ msgstr "Anlage"
 
 #~ msgid "Select the enclosure where this area belongs to."
 #~ msgstr "Wähle die Anlage zu dem dieser Bereich gehört."
@@ -1323,9 +1348,6 @@ msgstr "Telegramm"
 
 #~ msgid "Please enter value between %s and %s."
 #~ msgstr "Bitte einen Wert zwischen %s und %s eingeben."
-
-#~ msgid "Enclosure settings"
-#~ msgstr "Anlage Einstellungen"
 
 #~ msgid "Image"
 #~ msgstr "Bild"
@@ -2841,11 +2863,6 @@ msgstr "Telegramm"
 #~| msgid "Save"
 #~ msgid "Save ok"
 #~ msgstr "Sichern"
-
-#, fuzzy
-#~| msgid "Your changes are saved"
-#~ msgid "Settings are saved"
-#~ msgstr "Ihre Änderungen wurden gespeichert"
 
 #, fuzzy
 #~| msgid "Data could not be saved"

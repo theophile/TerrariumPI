@@ -22,6 +22,7 @@
 
   let calibration = true; // Calibration is always enabled due to offset setting
   let hardware_type = null;
+  let sensor_type = null;
 
   let sensor_types = [];
 
@@ -38,7 +39,7 @@
 
   const hardwareType = (device) => {
     hardware_type = device;
-    if (hardware_type == 'css811' && ccs811_compensation_sensors.length == 0) {
+    if (hardware_type === 'css811' && ccs811_compensation_sensors.length === 0) {
       fetchSensors(
         'temperature',
         (data) =>
@@ -49,7 +50,7 @@
     }
     sensor_types = [];
     hardware.forEach((item) => {
-      if (item.value == device) {
+      if (item.value === device) {
         sensor_types = item.types.map((sensor_type) => {
           return { value: sensor_type, text: sensor_type };
         });
@@ -164,14 +165,14 @@
   </svelte:fragment>
 
   <form class="needs-validation" class:was-validated="{validated}" use:form bind:this="{editForm}">
-    <input type="hidden" name="id" disabled="{$formData.id && $formData.id != '' ? null : true}" />
+    <input type="hidden" name="id" disabled="{$formData.id && $formData.id !== '' ? null : true}" />
 
     <div class="row">
       <div class="col-12 col-sm-6 col-md-4 col-lg-2">
         <Select
           name="hardware"
           value="{$formData.hardware}"
-          readonly="{$formData.id && $formData.id != ''}"
+          readonly="{$formData.id && $formData.id !== ''}"
           on:change="{(value) => hardwareType(value.detail)}"
           required="{true}"
           options="{hardware}"
@@ -184,7 +185,8 @@
         <Select
           name="type"
           value="{$formData.type}"
-          readonly="{$formData.id && $formData.id != ''}"
+          readonly="{$formData.id && $formData.id !== ''}"
+          on:change="{(value) => sensor_type = value.detail }"
           required="{true}"
           options="{sensor_types}"
           label="{$_('sensors.settings.type.label', { default: 'Type' })}"
@@ -316,52 +318,61 @@
                 default: 'The entered value is not valid. It needs to be number.',
               })}" />
           </div>
-          {#if hardware_type == 'chirp'}
-            <div class="col-6 col-sm-6 col-md-6 col-lg-2">
-              <Field
-                type="number"
-                name="calibration.chirp_min_moist"
-                step="0.0001"
-                min="0"
-                horizontal="{false}"
-                label="{$_('sensors.settings.calibration.chirp_min_moist.label', { default: 'Minimum moist value' })}"
-                help="{$_('sensors.settings.calibration.chirp_min_moist.help', { default: 'Enter the minimum moist value.' })}"
-                invalid="{$_('sensors.settings.calibration.chirp_min_moist.invalid', {
+          <div class="col-6 col-sm-6 col-md-6 col-lg-2" class:d-none={sensor_type !== 'chirp'}>
+            <Field
+              type="number"
+              name="calibration.chirp_min_moist"
+              step="0.0001"
+              min="0"
+              horizontal="{false}"
+              label="{$_('sensors.settings.calibration.chirp_min_moist.label', { default: 'Minimum moist value' })}"
+              help="{$_('sensors.settings.calibration.chirp_min_moist.help', { default: 'Enter the minimum moist value.' })}"
+              invalid="{$_('sensors.settings.calibration.chirp_min_moist.invalid', {
+                default: 'The entered value is not valid. It needs to be number higher then {min}.',
+                values: { min: 0 },
+              })}" />
+          </div>
+          <div class="col-6 col-sm-6 col-md-6 col-lg-2" class:d-none={sensor_type !== 'chirp'}>
+            <Field
+              type="number"
+              name="calibration.chirp_max_moist"
+              step="0.0001"
+              min="0"
+              horizontal="{false}"
+              label="{$_('sensors.settings.calibration.chirp_max_moist.label', { default: 'Maximum moist value' })}"
+              help="{$_('sensors.settings.calibration.chirp_max_moist.help', { default: 'Enter the maximum moist value.' })}"
+              invalid="{$_('sensors.settings.calibration.chirp_max_moist.invalid', {
+                default: 'The entered value is not valid. It needs to be number higher then {min}.',
+                values: { min: 0 },
+              })}" />
+          </div>
+          <div class="col-6 col-sm-6 col-md-6 col-lg-4" class:d-none={sensor_type !== 'css811'}>
+            <Select
+              name="calibration.ccs811_compensation_sensors"
+              multiple="{true}"
+              options="{ccs811_compensation_sensors}"
+              label="{$_('sensors.settings.calibration.ccs811_compensation_sensors.label', { default: 'Compensation sensors' })}"
+              placeholder="{$_('sensors.settings.calibration.ccs811_compensation_sensors.placeholder', {
+                default: 'Select compensation sensors',
+              })}"
+              help="{$_('sensors.settings.calibration.ccs811_compensation_sensors.help', {
+                default: 'Select the sensors for the compensation calculation.',
+              })}" />
+          </div>
+          <div class="col-6 col-sm-6 col-md-6 col-lg-2" class:d-none={sensor_type !== 'light'}>
+            <Field
+              type="number"
+              name="calibration.light_on_off_threshold"
+              step="0.0001"
+              min="0"
+              horizontal="{false}"
+              label="{$_('sensors.settings.calibration.light_threshold.label', { default: 'Lights on threshold' })}"
+              help="{$_('sensors.settings.calibration.light_threshold.help', { default: 'Enter the value when considered the lights are on.' })}"
+              invalid="{$_('sensors.settings.calibration.light_threshold.invalid', {
                   default: 'The entered value is not valid. It needs to be number higher then {min}.',
                   values: { min: 0 },
-                })}" />
-            </div>
-            <div class="col-6 col-sm-6 col-md-6 col-lg-2">
-              <Field
-                type="number"
-                name="calibration.chirp_max_moist"
-                step="0.0001"
-                min="0"
-                horizontal="{false}"
-                label="{$_('sensors.settings.calibration.chirp_max_moist.label', { default: 'Maximum moist value' })}"
-                help="{$_('sensors.settings.calibration.chirp_max_moist.help', { default: 'Enter the maximum moist value.' })}"
-                invalid="{$_('sensors.settings.calibration.chirp_max_moist.invalid', {
-                  default: 'The entered value is not valid. It needs to be number higher then {min}.',
-                  values: { min: 0 },
-                })}" />
-            </div>
-          {/if}
-
-          {#if hardware_type == 'css811'}
-            <div class="col-6 col-sm-6 col-md-6 col-lg-4">
-              <Select
-                name="calibration.ccs811_compensation_sensors"
-                multiple="{true}"
-                options="{ccs811_compensation_sensors}"
-                label="{$_('sensors.settings.calibration.ccs811_compensation_sensors.label', { default: 'Compensation sensors' })}"
-                placeholder="{$_('sensors.settings.calibration.ccs811_compensation_sensors.placeholder', {
-                  default: 'Select compensation sensors',
-                })}"
-                help="{$_('sensors.settings.calibration.ccs811_compensation_sensors.help', {
-                  default: 'Select the sensors for the compensation calculation.',
-                })}" />
-            </div>
-          {/if}
+              })}" />
+          </div>
         </div>
       </div>
     </div>

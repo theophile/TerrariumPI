@@ -6,25 +6,26 @@
  2. Run this script with the -h for more information: ./fix_db.py -h
 """
 
-import sqlite3
 from pathlib import Path
 import time
 import psutil
 import argparse
+import os
 
-DATABASE = '../data/terrariumpi.db'
+DATABASE = "../data/terrariumpi.db"
 
 # Shameless copy from: https://stackoverflow.com/a/63839503
 from typing import List, Union
 
+
 class HumanBytes:
     METRIC_LABELS: List[str] = ["B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
     BINARY_LABELS: List[str] = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
-    PRECISION_OFFSETS: List[float] = [0.5, 0.05, 0.005, 0.0005] # PREDEFINED FOR SPEED.
-    PRECISION_FORMATS: List[str] = ["{}{:.0f} {}", "{}{:.1f} {}", "{}{:.2f} {}", "{}{:.3f} {}"] # PREDEFINED FOR SPEED.
+    PRECISION_OFFSETS: List[float] = [0.5, 0.05, 0.005, 0.0005]  # PREDEFINED FOR SPEED.
+    PRECISION_FORMATS: List[str] = ["{}{:.0f} {}", "{}{:.1f} {}", "{}{:.2f} {}", "{}{:.3f} {}"]  # PREDEFINED FOR SPEED.
 
     @staticmethod
-    def format(num: Union[int, float], metric: bool=False, precision: int=1) -> str:
+    def format(num: Union[int, float], metric: bool = False, precision: int = 1) -> str:
         """
         Human-readable formatting of bytes, using binary (powers of 1024)
         or metric (powers of 1000) representation.
@@ -40,7 +41,7 @@ class HumanBytes:
         unit_step_thresh = unit_step - HumanBytes.PRECISION_OFFSETS[precision]
 
         is_negative = num < 0
-        if is_negative: # Faster than ternary assignment or always running abs().
+        if is_negative:  # Faster than ternary assignment or always running abs().
             num = abs(num)
 
         for unit in unit_labels:
@@ -62,78 +63,82 @@ class HumanBytes:
         return HumanBytes.PRECISION_FORMATS[precision].format("-" if is_negative else "", num, unit)
 
 
-
 def find_procs_by_name(name):
     "Return a list of processes matching 'name'."
     ls = []
-    for p in psutil.process_iter(['name']):
-        if p.info['name'] == name:
+    for p in psutil.process_iter(["name"]):
+        if p.info["name"] == name:
             ls.append(p)
     return ls
 
-def check_terrariumpi_stopped():
-  running = len(find_procs_by_name('terrariumPI.py')) > 0
-  if running:
-    print('TerrariumPI is still running. Please shutdown first!')
-    return False
 
-  return True
+def check_terrariumpi_stopped():
+    running = len(find_procs_by_name("terrariumPI.py")) > 0
+    if running:
+        print("TerrariumPI is still running. Please shutdown first!")
+        return False
+
+    return True
+
 
 def check_disk_space(path):
-  if not path.is_file():
-    print(f'File \'{path}\' does not exists!')
-    return False
+    if not path.is_file():
+        print(f"File '{path}' does not exists!")
+        return False
 
-  disk_usage = psutil.disk_usage(path)
-  min_space_needed = path.stat().st_size + 100 * 1024 * 1024
+    disk_usage = psutil.disk_usage(path)
+    min_space_needed = path.stat().st_size + 100 * 1024 * 1024
 
-  if disk_usage.free - path.stat().st_size < 100 * 1024 * 1024:
-    print(f'There is not enough disk space left. Found: {HumanBytes.format(disk_usage.free)}. Needing: {HumanBytes.format(path.stat().st_size)} (database) + {HumanBytes.format(100 * 1024 * 1024)} (spare) = {HumanBytes.format(min_space_needed)} total.')
-    return False
+    if disk_usage.free - path.stat().st_size < 100 * 1024 * 1024:
+        print(
+            f"There is not enough disk space left. Found: {HumanBytes.format(disk_usage.free)}. Needing: {HumanBytes.format(path.stat().st_size)} (database) + {HumanBytes.format(100 * 1024 * 1024)} (spare) = {HumanBytes.format(min_space_needed)} total."
+        )
+        return False
+
+    print(
+        f"Found broken database at: {path.resolve()}. Size: {HumanBytes.format(path.stat().st_size)}. Remaining disk space: {HumanBytes.format(disk_usage.free)}"
+    )
+    return True
 
 
-  print(f'Found broken database at: {path.resolve()}. Size: {HumanBytes.format(path.stat().st_size)}. Remaining disk space: {HumanBytes.format(disk_usage.free)}')
-  return True
+def check_sqlite3():
+    installed = os.system("sqlite3 -version >/dev/null 2>/dev/null") == 0
+    if not installed:
+        print("Please install sqlite3 with the command: sudo apt install sqlite3")
+
+    return installed
 
 
 def fix_database(database):
-  starttime = time.time()
-  # Based on: http://www.dosomethinghere.com/2013/02/20/fixing-the-sqlite-error-the-database-disk-image-is-malformed/
-  def progress(status, remaining, total):
-    status = ((total-remaining) / total) * 100
+    starttime = time.time()
+    print("Running recovering database ... ")
 
-    print('\r' + f'Copied {total-remaining}({status:.2f}%) of {total} pages...', end='')
+    os.system(f'sqlite3 {database} .dump | sed "s/ROLLBACK;.*/COMMIT;/" | sqlite3 {database}.new')
 
-  broken_db = sqlite3.connect(str(database))
-  new_db    = sqlite3.connect(f'{database}.new')
+    # # Delete broken db
+    Path(str(database)).rename(f"{database}.broken")
+    Path(f"{database}.new").rename(database)
 
-  with new_db:
-    broken_db.backup(new_db, pages=10, progress=progress)
-
-  new_db.close()
-  broken_db.close()
-
-  # Delete broken db
-  Path(str(database)).rename(f'{database}.broken')
-  Path(f'{database}.new').rename(database)
-
-  print(f'\nRecovery done in {time.time()-starttime:.2f} seconds. New database is located at: {database.resolve()}')
+    print(f"Recovery done in {time.time()-starttime:.2f} seconds. New database is located at: {database.resolve()}")
 
 
-if __name__ == '__main__':
-  parser = argparse.ArgumentParser(description='This script will try to fix a broken TerrariumPI SQLite database.')
-  parser.add_argument('-d','--database', help='path to the broken database.', type=Path, default=Path(DATABASE))
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="This script will try to fix a broken TerrariumPI SQLite database.")
+    parser.add_argument("-d", "--database", help="path to the broken database.", type=Path, default=Path(DATABASE))
 
-  args = parser.parse_args()
+    args = parser.parse_args()
 
-  if not check_terrariumpi_stopped():
-    exit()
+    if not check_sqlite3():
+        exit()
 
-  if not check_disk_space(args.database):
-    exit()
+    if not check_terrariumpi_stopped():
+        exit()
 
-  go = input('Would you like to continue to fix your database? Enter \'yes\' to start. Anything else will abort.\n')
-  if go.lower() != 'yes':
-    exit(0)
+    if not check_disk_space(args.database):
+        exit()
 
-  fix_database(args.database)
+    go = input("Would you like to continue to fix your database? Enter 'yes' to start. Anything else will abort.\n")
+    if go.lower() != "yes":
+        exit(0)
+
+    fix_database(args.database)

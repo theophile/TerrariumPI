@@ -30,6 +30,12 @@
         "label": "Anexo",
         "placeholder": "Selecione o gabinete"
       },
+      "light_sensors": {
+        "help": "",
+        "invalid": "",
+        "label": "",
+        "placeholder": ""
+      },
       "mode": {
         "help": "Selecione o modo deste equipamento. Esta opção altera o tempo e a duração dos relés.",
         "invalid": "Por favor, faça uma escolha.",
@@ -49,6 +55,12 @@
         "invalid": "O nome inserido não é válido. Não pode estar vazio.",
         "label": "Nome",
         "placeholder": "Insira o nome"
+      },
+      "relay": {
+        "slider": {
+          "delay": "Atraso: {delay} minutos.",
+          "duration": "Atraso: {delay} minutos. Duração: {duration} minutos"
+        }
       },
       "save": {
         "error": {
@@ -76,8 +88,19 @@
           },
           "placeholder": "Selecione a fonte de informações para determinar dia / noite"
         },
+        "depend_on_relays_mode": {
+          "all": {
+            "label": ""
+          },
+          "none": {
+            "label": ""
+          },
+          "one": {
+            "label": ""
+          }
+        },
         "deviation_high_alarm": {
-          "help": "",
+          "help": "Aumentar ou diminuir valor máximo do alarme.",
           "invalid": "Insira um número válido.",
           "label": "Desvio de alarme alto",
           "placeholder": "Desvio de alarme alto"
@@ -94,6 +117,18 @@
             "invalid": "Digite uma hora válida.",
             "label": "Hora de início",
             "placeholder": "Digite o horário de início"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Selecione o estado da porta para disparar a ação.",
@@ -200,6 +235,18 @@
             "invalid": "Digite uma hora válida.",
             "label": "Hora de início",
             "placeholder": "Digite o horário de início"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Selecione o estado da porta para disparar a ação.",
@@ -421,6 +468,11 @@
           "ok": {
             "message": "Enviado {amount, plural, =1 {# arquivo de áudio} other {# arquivos de áudio}}"
           }
+        },
+        "upload": {
+          "error": {
+            "nologin": "Faça login para fazer upload de arquivos."
+          }
         }
       },
       "title": "Arquivos de áudio"
@@ -480,6 +532,7 @@
         },
         "title": "Configurações da playlist",
         "volume": {
+          "formatter": "Nível de volume de áudio: {value}",
           "help": "Selecione o volume desta playlist.",
           "label": "Volume de Áudio"
         }
@@ -534,8 +587,8 @@
       },
       "calibration": {
         "inverse": {
-          "help": "",
-          "label": ""
+          "help": "Ative para inverter o valor remoto.",
+          "label": "Valor inverso"
         },
         "ldr_capacitor": {
           "help": "Digite o valor do capacitor em µF, pois isso influenciará o cálculo da luz.",
@@ -544,10 +597,10 @@
           "placeholder": "Insira o valor do capacitor em µF"
         },
         "timeout": {
-          "help": "",
-          "invalid": "",
-          "label": "",
-          "placeholder": ""
+          "help": "Insira o limite de tempo em segundos entre as checagens remotas.",
+          "invalid": "O limite de tempo inserido não é válido. Insira um valor entre {min} e {max}.",
+          "label": "Tempo limite em segundos",
+          "placeholder": "Insira o tempo limite em segundos"
         }
       },
       "current": {
@@ -938,6 +991,9 @@
   },
   "modal": {
     "confirm": {
+      "docker": {
+        "not_available": "Esse recurso não é possível em uma configuração do Docker."
+      },
       "relays": {
         "scan": "Isso iniciará uma nova varredura para encontrar novos relés. Isso pode levar até 30 segundos."
       },
@@ -963,6 +1019,9 @@
     "general": {
       "close": "Fechar",
       "save": "Salvar"
+    },
+    "loading": {
+      "title": "Carregando"
     },
     "login": {
       "error": "Login inválido",
@@ -1014,8 +1073,8 @@
     },
     "door": {
       "status": {
-        "closed": "",
-        "open": "",
+        "closed": "Porta ''{name}'' fechada",
+        "open": "Porta ''{name}'' aberta",
         "title": "Atualização do status da porta"
       }
     },
@@ -1260,6 +1319,11 @@
       "uvb": "UVB média",
       "uvi": "Índice UV médio"
     },
+    "calibration": {
+      "light_on_off_threshold": {
+        "light_bulb": ""
+      }
+    },
     "co2": {
       "menu": {
         "title": "CO2"
@@ -1375,6 +1439,11 @@
           "help": "Digite o valor mínimo úmido.",
           "invalid": "O valor inserido não é válido. Ele precisa ser um número maior e então {min}.",
           "label": "valor mínimo umidade"
+        },
+        "light_threshold": {
+          "help": "",
+          "invalid": "",
+          "label": ""
         },
         "offset": {
           "help": "Insira o valor de compensação para este sensor.",
@@ -1886,6 +1955,12 @@
       "settings": "Editar webcam"
     },
     "archive": {
+      "modal": {
+        "loading": {
+          "status": "Atualmente carregadas {total} imagens ... ({percentage}%)",
+          "title": "Iniciando o carregamento de imagens de arquivo da webcam..."
+        }
+      },
       "no_images": "Sem imagens de arquivo disponíveis"
     },
     "confirm": {

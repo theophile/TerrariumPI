@@ -22,6 +22,10 @@
 
   export let horizontal = null;
 
+  export let formatter = (value) => {
+   return value;
+  };
+
   let slider;
 
   let old_data;
@@ -37,30 +41,32 @@
       value: value,
       range: Array.isArray(value),
       enabled: true,
-      formatter: (value) => {
-        if (undefined !== value.length && 2 == value.length) {
-          return 'Delay: ' + value[0] + ' minutes, Duration: ' + (value[1] - value[0]) + ' minutes';
-        }
-        return 'Delay: ' + value + ' minutes';
-      },
-      // initial options object
+      formatter: formatter,
     });
 
     slider.on('change', (data) => {
-      if (old_data != data) {
-        old_data == data;
+      if (old_data !== data) {
+        old_data === data;
         changeAction();
       }
     });
     slider.setValue(value);
     return () => {
       slider.destroy();
+      slider = null;
     };
   });
 
-  //   $: if (slider) {
-  // //    slider.setValue(value)
-  //   }
+  $: if (slider) {
+      if (Array.isArray(value) && value.length === 1) {
+        value.push(0);
+      }
+      try {
+        slider.setValue(value);
+      } catch (e) {
+        // Just ignore
+      }
+  }
 </script>
 
 <FormGroup

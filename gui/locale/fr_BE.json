@@ -30,6 +30,12 @@
         "label": "Enceinte",
         "placeholder": "Sélectionner un boîtier"
       },
+      "light_sensors": {
+        "help": "",
+        "invalid": "",
+        "label": "",
+        "placeholder": ""
+      },
       "mode": {
         "help": "Sélectionnez le mode de cette zone. Cela modifiera le timing et la durée des relais.",
         "invalid": "Veuillez faire un choix.",
@@ -49,6 +55,12 @@
         "invalid": "Le nom entré n'est pas valide. Il ne peut pas être vide.",
         "label": "Nom",
         "placeholder": "Nom de fichier"
+      },
+      "relay": {
+        "slider": {
+          "delay": "Retard : {delay} minutes.",
+          "duration": "Retard : {delay} minutes. Durée : {duration} minutes"
+        }
       },
       "save": {
         "error": {
@@ -76,6 +88,17 @@
           },
           "placeholder": "Différence jour/nuit"
         },
+        "depend_on_relays_mode": {
+          "all": {
+            "label": ""
+          },
+          "none": {
+            "label": ""
+          },
+          "one": {
+            "label": ""
+          }
+        },
         "deviation_high_alarm": {
           "help": "",
           "invalid": "Saisissez un numéro valide.",
@@ -94,6 +117,18 @@
             "invalid": "Date et heure.",
             "label": "Date et heure",
             "placeholder": "Date et heure"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Choisir une option.",
@@ -200,6 +235,18 @@
             "invalid": "Date et heure.",
             "label": "Date et heure",
             "placeholder": "Date et heure"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Choisir une option.",
@@ -421,6 +468,11 @@
           "ok": {
             "message": "Téléchargé {amount, plural, =1 {# fichier audio} other {# fichier audios}}"
           }
+        },
+        "upload": {
+          "error": {
+            "nologin": ""
+          }
         }
       },
       "title": "Fichiers audio"
@@ -480,6 +532,7 @@
         },
         "title": "Paramètres de la webcam",
         "volume": {
+          "formatter": "Niveau de volume audio: {value}",
           "help": "Contient le volume pour cette liste de lecture.",
           "label": "Fichiers audio"
         }
@@ -938,6 +991,9 @@
   },
   "modal": {
     "confirm": {
+      "docker": {
+        "not_available": "Cette fonctionnalité n'est pas possible dans une configuration Docker."
+      },
       "relays": {
         "scan": "Cela commencera un nouveau scan pour trouver de nouveaux relais. Cela peut prendre jusqu'à 30 secondes."
       },
@@ -963,6 +1019,9 @@
     "general": {
       "close": "Fermer",
       "save": "sauvegarder"
+    },
+    "loading": {
+      "title": "Chargement"
     },
     "login": {
       "error": "Identifiant invalide",
@@ -1260,6 +1319,11 @@
       "uvb": "UVB moyen",
       "uvi": "Indice UV moyen"
     },
+    "calibration": {
+      "light_on_off_threshold": {
+        "light_bulb": ""
+      }
+    },
     "co2": {
       "menu": {
         "title": "Malade"
@@ -1375,6 +1439,11 @@
           "help": "Entrez la valeur humide minimale.",
           "invalid": "La valeur entrée n'est pas valide. Il doit être plus élevé alors {min}.",
           "label": "Heures maximales de lumières"
+        },
+        "light_threshold": {
+          "help": "",
+          "invalid": "",
+          "label": ""
         },
         "offset": {
           "help": "Contient la carte son utilisée pour la lecture audio.",
@@ -1886,6 +1955,12 @@
       "settings": "Ajouter une nouvelle webcam"
     },
     "archive": {
+      "modal": {
+        "loading": {
+          "status": "{total} images actuellement chargées... ({pourcentage} %)",
+          "title": "Démarrage du chargement des images d'archives de la webcam..."
+        }
+      },
       "no_images": "Aucune image d'archive disponible"
     },
     "confirm": {

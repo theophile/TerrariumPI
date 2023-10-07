@@ -6,7 +6,7 @@ tags: [webcam, live, picture]
 image:
   path: /assets/img/rtspcam.webp
   src: /assets/img/rtspcam.webp
-  alt: "USB camera"
+  alt: "RTSP camera"
 
 device_type: Still picture
 device_address: "Enter the device rtsp url<br />Ex: `rtsp://server.lan/stream`"

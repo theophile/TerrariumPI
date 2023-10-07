@@ -30,6 +30,12 @@
         "label": "Encerclament",
         "placeholder": "Seleccioneu el recinte"
       },
+      "light_sensors": {
+        "help": "",
+        "invalid": "",
+        "label": "",
+        "placeholder": ""
+      },
       "mode": {
         "help": "Seleccioneu el mode d'aquesta àrea. Això canviarà el temps i la durada dels relés.",
         "invalid": "Feu una tria.",
@@ -49,6 +55,12 @@
         "invalid": "El nom introduït no és vàlid. No pot estar buit.",
         "label": "Nom",
         "placeholder": "Introduïu un nom"
+      },
+      "relay": {
+        "slider": {
+          "delay": "Retard: {delay} minuts.",
+          "duration": "Retard: {delay} minuts. Durada: {duration} minuts"
+        }
       },
       "save": {
         "error": {
@@ -76,6 +88,17 @@
           },
           "placeholder": "Seleccioneu una font de dia/nit"
         },
+        "depend_on_relays_mode": {
+          "all": {
+            "label": ""
+          },
+          "none": {
+            "label": ""
+          },
+          "one": {
+            "label": ""
+          }
+        },
         "deviation_high_alarm": {
           "help": "Augment de la disminució del valor d'alarma alt.",
           "invalid": "Introduïu un número vàlid.",
@@ -94,6 +117,18 @@
             "invalid": "Introduïu un temps vàlid.",
             "label": "Temps d’inici",
             "placeholder": "Introduïu el temps d’inici"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Seleccioneu l'estat de la porta.",
@@ -200,6 +235,18 @@
             "invalid": "Introduïu un temps vàlid.",
             "label": "Temps d’inici",
             "placeholder": "Introduïu el temps d’inici"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Seleccioneu l'estat de la porta.",
@@ -421,6 +468,11 @@
           "ok": {
             "message": "Penjat {amount, plural, =1 {# fitxer d'àudio} other {# fitxer d'àudios}}"
           }
+        },
+        "upload": {
+          "error": {
+            "nologin": "Inicia sessió per pujar fitxers."
+          }
         }
       },
       "title": "Fitxers d'àudio"
@@ -480,6 +532,7 @@
         },
         "title": "Configuració de la llista de reproducció",
         "volume": {
+          "formatter": "Nivell de volum d'àudio: {value}",
           "help": "Seleccioneu el volum d'aquesta llista de reproducció.",
           "label": "Volum d'àudio"
         }
@@ -713,7 +766,7 @@
         "low": "baix",
         "night": "Nit"
       },
-      "range": "Distància",
+      "range": "Interval",
       "type": {
         "audio": "Àudio",
         "cooling": "Refrigeració",
@@ -938,6 +991,9 @@
   },
   "modal": {
     "confirm": {
+      "docker": {
+        "not_available": "Aquesta funció no és possible en una configuració de Docker."
+      },
       "relays": {
         "scan": "Això iniciarà una nova exploració per trobar nous relés. Això pot trigar fins a 30 segons."
       },
@@ -962,7 +1018,10 @@
     },
     "general": {
       "close": "Tanca",
-      "save": "Estalviar"
+      "save": "Guardar"
+    },
+    "loading": {
+      "title": "Carregant"
     },
     "login": {
       "error": "Accés incorrecte",
@@ -1260,6 +1319,11 @@
       "uvb": "UVB mitjà",
       "uvi": "Índex UV mitjà"
     },
+    "calibration": {
+      "light_on_off_threshold": {
+        "light_bulb": ""
+      }
+    },
     "co2": {
       "menu": {
         "title": "Malalt"
@@ -1375,6 +1439,11 @@
           "help": "Introduïu el valor humit mínim.",
           "invalid": "El valor introduït no és vàlid. Ha de ser un nombre més alt que {min}.",
           "label": "Valor humit mínim"
+        },
+        "light_threshold": {
+          "help": "",
+          "invalid": "",
+          "label": ""
         },
         "offset": {
           "help": "Introduïu Offset per a aquest sensor.",
@@ -1739,7 +1808,7 @@
       "pi-wattage": {
         "help": "Introduïu l'ús total de potència del PI amb tots els seus dispositius USB connectats.",
         "invalid": "Introduïu un valor mínim de {value}.",
-        "label": "Ús de Pi Power"
+        "label": "Consum d'energia Pi en W"
       },
       "port": {
         "help": "Introduïu el número de port per escoltar connexions. 8090 per defecte.",
@@ -1821,7 +1890,7 @@
   },
   "table": {
     "field": {
-      "range": "distància"
+      "range": "Interval"
     },
     "header": {
       "actions": "Accions",
@@ -1886,6 +1955,12 @@
       "settings": "Edita la càmera web"
     },
     "archive": {
+      "modal": {
+        "loading": {
+          "status": "S'han carregat {total} imatges... ({percentage}%)",
+          "title": "S'estan començant a carregar imatges d'arxiu de la càmera web..."
+        }
+      },
       "no_images": "No hi ha imatges d’arxiu disponibles"
     },
     "confirm": {

@@ -30,6 +30,12 @@
         "label": "Verblijf",
         "placeholder": "Selecteer behuizing"
       },
+      "light_sensors": {
+        "help": "Selecteer de lichtsensoren om te detecteren of de lichten branden.",
+        "invalid": "Maak een keuze.",
+        "label": "Lichtdetectiesensoren",
+        "placeholder": "Lichtsensoren selecteren"
+      },
       "mode": {
         "help": "Selecteer de modus van dit gebied. Dit bepaald de timing en duur van de schakelaars.",
         "invalid": "Maak een keuze.",
@@ -49,6 +55,12 @@
         "invalid": "De ingevoerde naam is niet geldig. Het kan niet leeg zijn.",
         "label": "Naam",
         "placeholder": "Vul een naam in"
+      },
+      "relay": {
+        "slider": {
+          "delay": "Vertraging: {delay} minuten.",
+          "duration": "Vertraging: {delay} minuten. Duur: {duration} minuten"
+        }
       },
       "save": {
         "error": {
@@ -76,6 +88,17 @@
           },
           "placeholder": "Selecteer een dag/nacht bron"
         },
+        "depend_on_relays_mode": {
+          "all": {
+            "label": "Alles aan"
+          },
+          "none": {
+            "label": "Geen aan"
+          },
+          "one": {
+            "label": "Minstens een"
+          }
+        },
         "deviation_high_alarm": {
           "help": "Toename of afname hoge alarmwaarde.",
           "invalid": "Voer een geldig nummer in.",
@@ -95,9 +118,21 @@
             "label": "Begintijd",
             "placeholder": "Voer de begintijd in"
           },
+          "depend_on_relays": {
+            "help": "Selecteer de relais waarvan deze relais afhankelijk zijn.",
+            "invalid": "Maak een keuze.",
+            "label": "Afhankelijk van relais",
+            "placeholder": "Selecteer schakelaars"
+          },
+          "depend_on_relays_mode": {
+            "help": "Selecteer afhankelijke modus",
+            "invalid": "Maak een keuze.",
+            "label": "Afhankelijks modus",
+            "placeholder": "Selecteer een modus"
+          },
           "door_status": {
             "help": "Selecteer de deurstatus.",
-            "invalid": "Maak alstublieft een keuze.",
+            "invalid": "Maak een keuze.",
             "label": "Deur status",
             "options": {
               "closed": "Gesloten",
@@ -200,6 +235,18 @@
             "invalid": "Voer een geldige tijd in.",
             "label": "Begintijd",
             "placeholder": "Voer de begintijd in"
+          },
+          "depend_on_relays": {
+            "help": "Selecteer de relais waarvan deze relais afhankelijk zijn.",
+            "invalid": "Maak een keuze.",
+            "label": "Afhankelijk van relais",
+            "placeholder": "Selecteer schakelaars"
+          },
+          "depend_on_relays_mode": {
+            "help": "Selecteer afhankelijke modus",
+            "invalid": "Maak een keuze.",
+            "label": "Afhankelijks modus",
+            "placeholder": "Selecteer een modus"
           },
           "door_status": {
             "help": "Selecteer de deurstatus.",
@@ -357,7 +404,7 @@
             "placeholder": "Verschil"
           },
           "when": {
-            "invalid": "Maak alstublieft een keuze.",
+            "invalid": "Maak een keuze.",
             "options": {
               "after": "Na x minuten",
               "at": "Op tijd",
@@ -421,6 +468,11 @@
           "ok": {
             "message": "Geüpload {amount, plural, =1 {# geluidsbestand} other {# geluidsbestands}}"
           }
+        },
+        "upload": {
+          "error": {
+            "nologin": "Log in om bestanden te uploaden."
+          }
         }
       },
       "title": "Audio bestanden"
@@ -480,6 +532,7 @@
         },
         "title": "Afspeellijst instellingen",
         "volume": {
+          "formatter": "Audiovolumeniveau: {value}",
           "help": "Selecteer het volume voor deze afspeellijst.",
           "label": "Audiovolume"
         }
@@ -893,7 +946,7 @@
         "placeholder": "Voer een bericht in"
       },
       "placeholders": {
-        "format": "Numberwaarden kunnen worden afgerond met de {link_start} `.: 2f` format {link_end}",
+        "format": "Gebruik {placeholder} opmaak om een variabele van de lijst hieronder te gebruiken.{new_line}Numberwaarden kunnen worden afgerond met de {link_start} `.: 2f` format {link_end}",
         "help": "Beschikbare plaatshouders.",
         "label": "Plaatshouders"
       },
@@ -938,6 +991,9 @@
   },
   "modal": {
     "confirm": {
+      "docker": {
+        "not_available": "Deze functie is niet mogelijk in een Docker-configuratie."
+      },
       "relays": {
         "scan": "Dit start een nieuwe scan om nieuwe schakelaar te vinden. Dit kan tot 30 seconden duren."
       },
@@ -963,6 +1019,9 @@
     "general": {
       "close": "Sluiten",
       "save": "Bewaar"
+    },
+    "loading": {
+      "title": "Bezig met laden"
     },
     "login": {
       "error": "Ongeldige login",
@@ -1260,6 +1319,11 @@
       "uvb": "Gemiddelde UVB",
       "uvi": "Gemiddelde UV index"
     },
+    "calibration": {
+      "light_on_off_threshold": {
+        "light_bulb": "Licht aan/uit drempelwaarde: {threshold}"
+      }
+    },
     "co2": {
       "menu": {
         "title": "CO2"
@@ -1368,13 +1432,18 @@
         },
         "chirp_max_moist": {
           "help": "Voer de maximale vochtige waarde in.",
-          "invalid": "De ingevoerde waarde is niet geldig. Het moet nummer hoger zijn dan {min}.",
+          "invalid": "De ingevoerde waarde is niet geldig. Het moet een getal hoger zijn dan {min}.",
           "label": "Minimale vochtwaarde"
         },
         "chirp_min_moist": {
           "help": "Voer de minimale vochtige waarde in.",
           "invalid": "De ingevoerde waarde is niet geldig. Het moet een getal hoger zijn dan {min}.",
           "label": "minimale vochtigheidswaarde"
+        },
+        "light_threshold": {
+          "help": "Voer de waarde in als de lampen branden.",
+          "invalid": "De ingevoerde waarde is niet geldig. Het moet een getal hoger zijn dan {min}.",
+          "label": "Lichten aan waarde"
         },
         "offset": {
           "help": "Voer de compensatie in voor deze sensor.",
@@ -1412,7 +1481,7 @@
       },
       "max_diff": {
         "help": "Voer het maximale verschil in tussen twee metingen die geldig zijn. Voer '0' in om uit te schakelen.",
-        "invalid": "De ingevoerde waarde is niet geldig. Het moet nummer hoger zijn dan {min}.",
+        "invalid": "De ingevoerde waarde is niet geldig. Het moet een getal hoger zijn dan {min}.",
         "label": "Max verschil",
         "placeholder": "Max verschil"
       },
@@ -1673,7 +1742,7 @@
       },
       "dashboard_mode": {
         "help": "Selecteer hoe het dashboard eruit ziet.",
-        "invalid": "Maak alstublieft een keuze.",
+        "invalid": "Maak een keuze.",
         "label": "Dashboard-modus",
         "options": {
           "normal": "Grafieken en verblijven",
@@ -1886,6 +1955,12 @@
       "settings": "Bewerk webcam"
     },
     "archive": {
+      "modal": {
+        "loading": {
+          "status": "Momenteel geladen {total} afbeeldingen ... ({percentage}%)",
+          "title": "Beginnen met het laden van webcamarchiefbeelden ..."
+        }
+      },
       "no_images": "Geen archiefafbeeldingen beschikbaar"
     },
     "confirm": {
@@ -1962,7 +2037,7 @@
       "archive": {
         "door": {
           "help": "Deurstatus voor het maken van een archiefbeeld.",
-          "invalid": "Maak alstublieft een keuze.",
+          "invalid": "Maak een keuze.",
           "label": "Archief deur status",
           "options": {
             "close": "Sluiten",

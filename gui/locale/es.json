@@ -30,6 +30,12 @@
         "label": "Recinto",
         "placeholder": "Seleccionar el recinto"
       },
+      "light_sensors": {
+        "help": "",
+        "invalid": "",
+        "label": "",
+        "placeholder": ""
+      },
       "mode": {
         "help": "Seleccione el modo de esta área. Esto cambiará el momento y la duración de los relés.",
         "invalid": "Por favor tome una decisión.",
@@ -49,6 +55,11 @@
         "invalid": "El nombre ingresado no es válido. No puede estar vacío.",
         "label": "Nombre",
         "placeholder": "Ingresa un nombre"
+      },
+      "relay": {
+        "slider": {
+          "duration": "Retraso: {delay} minutos. Duración: {duración} minutos"
+        }
       },
       "save": {
         "error": {
@@ -76,12 +87,35 @@
           },
           "placeholder": "Seleccione una fuente de día/noche"
         },
+        "depend_on_relays_mode": {
+          "all": {
+            "label": ""
+          },
+          "none": {
+            "label": ""
+          },
+          "one": {
+            "label": ""
+          }
+        },
         "high": {
           "begin": {
             "help": "La hora del día en que los relés se alternan cada noche.",
             "invalid": "Ingrese un tiempo válido.",
             "label": "Comienza el tiempo",
             "placeholder": "Ingrese el tiempo de inicio"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Seleccione el estado de la puerta.",
@@ -188,6 +222,18 @@
             "invalid": "Ingrese un tiempo válido.",
             "label": "Comienza el tiempo",
             "placeholder": "Ingrese el tiempo de inicio"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Seleccione el estado de la puerta.",
@@ -383,6 +429,11 @@
           "ok": {
             "message": "Subido {amount, plural, =1 {# archivo de audio} other {# archivos de audio}}"
           }
+        },
+        "upload": {
+          "error": {
+            "nologin": ""
+          }
         }
       },
       "title": "Archivos de sonido"
@@ -442,6 +493,7 @@
         },
         "title": "Configuración de la lista de reproducción",
         "volume": {
+          "formatter": "Nivel de volumen de audio {valor}",
           "help": "Seleccione el volumen para esta lista de reproducción.",
           "label": "Volumen de audio"
         }
@@ -890,6 +942,9 @@
   },
   "modal": {
     "confirm": {
+      "docker": {
+        "not_available": "Esta característica no es posible en una configuración de Docker."
+      },
       "relays": {
         "scan": "Esto comenzará un nuevo escaneo para encontrar nuevos relés. Esto puede tomar hasta 30 segundos."
       },
@@ -915,6 +970,9 @@
     "general": {
       "close": "Cerca",
       "save": "Ahorrar"
+    },
+    "loading": {
+      "title": "Cargando"
     },
     "login": {
       "form": {
@@ -1206,6 +1264,11 @@
       "uvb": "UVB promedio",
       "uvi": "Índice UV promedio"
     },
+    "calibration": {
+      "light_on_off_threshold": {
+        "light_bulb": ""
+      }
+    },
     "co2": {
       "menu": {
         "title": "Enfermo"
@@ -1321,6 +1384,11 @@
           "help": "Ingrese el valor mínimo húmedo.",
           "invalid": "El valor ingresado no es válido. Debe ser un número más alto que {min}.",
           "label": "Valor mínimo húmedo"
+        },
+        "light_threshold": {
+          "help": "",
+          "invalid": "",
+          "label": ""
         },
         "offset": {
           "help": "Ingrese offset para este sensor.",
@@ -1822,6 +1890,12 @@
       "settings": "Editar cámaras web"
     },
     "archive": {
+      "modal": {
+        "loading": {
+          "status": "Actualmente cargadas {total} imágenes... ({porcentaje}%)",
+          "title": "Comenzando a cargar imágenes de archivo de cámara web..."
+        }
+      },
       "no_images": "No hay imágenes de archivo disponibles"
     },
     "confirm": {

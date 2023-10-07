@@ -11,7 +11,8 @@ import gzipPlugin from 'rollup-plugin-gzip';
 import json from "@rollup/plugin-json";
 import esbuild from "rollup-plugin-esbuild";
 import del from "rollup-plugin-delete";
-import template from "./html-template";
+import template from "./html-template.js";
+import { spawn } from "child_process";
 
 const production = process.env.NODE_ENV === "prod";
 
@@ -25,7 +26,7 @@ function serve() {
   return {
     writeBundle() {
       if (server) return;
-      server = require("child_process").spawn("npm", ["run", "start"], {
+      server = spawn("npm", ["run", "start"], {
         stdio: ["ignore", "inherit", "inherit"],
         shell: true
       });
@@ -187,10 +188,8 @@ export default {
         'public/js/select2.min.js',
 
         'public/js/fireworks.js',
-        'public/js/js.cookie.min.js',
         'public/js/swagger-ui-bundle.js',
         'public/js/swagger-ui-standalone-preset.js',
-        'public/js/tinyicon.min.js',
         'public/js/redoc.standalone.js',
 
         'public/css/swagger-ui.css',

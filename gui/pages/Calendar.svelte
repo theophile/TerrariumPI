@@ -91,7 +91,7 @@
     deleteButton.innerHTML = '<i class="fas fa-trash-alt text-danger">';
     deleteButton.onclick = deleteCalendarEventCall;
 
-    // We use the AdminLTE compiled calendar version which has better themeing..
+    // We use the AdminLTE compiled calendar version which has better theming..
     calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
       initialView: 'dayGridMonth',
       locale: $locale.substring(0, 2),
@@ -149,19 +149,24 @@
           calendar.unselect();
         } else {
           // Open modal for adding event
+          data.mode = 'repeat';
           editCalendarEvent(data);
         }
       },
       eventClick: function (data) {
         if ($isAuthenticated) {
           // Open modal for adding event
-          editCalendarEvent(data.event);
+          data = {
+            'id' : data.event.id,
+            'mode' : 'repeat'
+          }
+          editCalendarEvent(data);
         }
       },
 
       eventDrop: function (data) {
         let move = data.delta.days * (24 * 3600) + data.delta.months * (30 * 24 * 3600);
-        if ($isAuthenticated && move != 0) {
+        if ($isAuthenticated && move !== 0) {
           (async () => {
             let item = null;
             await fetchCalendarEvents(data.event.id, (data) => (item = data));
@@ -198,7 +203,7 @@
       eventResize: function (data) {
         let moveStart = data.startDelta.days * (24 * 3600) + data.startDelta.months * (30 * 24 * 3600);
         let moveEnd = data.endDelta.days * (24 * 3600) + data.endDelta.months * (30 * 24 * 3600);
-        if ($isAuthenticated && (moveStart != 0 || moveEnd != 0)) {
+        if ($isAuthenticated && (moveStart !== 0 || moveEnd !== 0)) {
           (async () => {
             let item = null;
             await fetchCalendarEvents(data.event.id, (data) => (item = data));

@@ -147,13 +147,13 @@
   </svelte:fragment>
 
   <form class="needs-validation" class:was-validated="{validated}" use:form bind:this="{editForm}">
-    <input type="hidden" name="id" disabled="{$formData.id && $formData.id != '' ? null : true}" />
+    <input type="hidden" name="id" disabled="{$formData.id && $formData.id !== '' ? null : true}" />
     <div class="row">
       <div class="col">
         <Select
           name="type"
           value="{$formData.type}"
-          readonly="{$formData.id && $formData.id != ''}"
+          readonly="{$formData.id && $formData.id !== ''}"
           required="{true}"
           options="{service_types}"
           on:change="{(value) => ($formData.type = value.detail)}"
@@ -199,7 +199,7 @@
       </div>
     </div>
 
-    {#if $formData.type == 'display'}
+    {#if $formData.type === 'display'}
       <div class="row">
         <div class="col">
           <Select
@@ -224,7 +224,7 @@
               default: 'The entered address is not valid. It cannot be empty.',
             })}" />
         </div>
-        <div class="col-1">
+        <div class="col-3">
           <Switch
             name="setup.show_title"
             value="{$formData.setup?.show_title || true}"
@@ -234,7 +234,7 @@
       </div>
     {/if}
 
-    {#if $formData.type == 'email'}
+    {#if $formData.type === 'email'}
       <div class="row">
         <div class="col">
           <Field
@@ -251,7 +251,7 @@
             type="text"
             name="setup.address"
             required="{true}"
-            label="{$_('services.settings.setup.address.label', { default: 'Address' })}"
+            label="{$_('services.settings.setup.address.email.label', { default: 'Server address' })}"
             placeholder="{$_('services.settings.setup.address.placeholder', { default: 'Enter an address' })}"
             help="{$_('services.settings.setup.address.help', { default: 'Enter an address.' })}"
             invalid="{$_('services.settings.setup.address.invalid', {
@@ -289,15 +289,19 @@
             placeholder="{$_('services.settings.setup.password.placeholder', { default: 'Enter a username' })}"
             help="{$_('services.settings.setup.password.help', { default: 'Enter the server password.' })}" />
         </div>
-        <small class="text-muted d-none ml-2">
-          {$_('services.settings.setup.ssl.email.label', {
-            default: 'The email notification service will auto detect SSL/TLS connections.',
-          })}
-        </small>
+      </div>
+      <div class="row">
+        <div class="col">
+            <small class="text-muted d-none ml-2 w-100 text-center">
+                {$_('services.settings.setup.ssl.email.label', {
+                  default: 'The email notification service will auto detect SSL/TLS connections.',
+                })}
+            </small>
+        </div>
       </div>
     {/if}
 
-    {#if $formData.type == 'pushover'}
+    {#if $formData.type === 'pushover'}
       <div class="row">
         <div class="col">
           <Field
@@ -323,16 +327,20 @@
               default: 'The entered user key is not valid. It cannot be empty.',
             })}" />
         </div>
-        <small class="text-muted d-none ml-2">
-          {@html $_('services.settings.setup.pushover.label', {
-            default: 'Create your tokens by registering TerrariumPI as an app {link}.',
-            values: { link: '<a href="https://pushover.net/api" target="_blank" rel="noopener">https://pushover.net/api</a>' },
-          })}
-        </small>
+      </div>
+      <div class="row">
+        <div class="col">
+            <small class="text-muted d-none ml-2 w-100 text-center">
+                {@html $_('services.settings.setup.pushover.label', {
+                    default: 'Create your tokens by registering TerrariumPI as an app {link}.',
+                    values: { link: '<a href="https://pushover.net/api" target="_blank" rel="noopener">https://pushover.net/api</a>' },
+                  })}
+            </small>
+        </div>
       </div>
     {/if}
 
-    {#if $formData.type == 'traffic'}
+    {#if $formData.type === 'traffic'}
       <div class="row">
         <div class="col">
           <Field
@@ -382,7 +390,7 @@
       </div>
     {/if}
 
-    {#if $formData.type == 'buzzer'}
+    {#if $formData.type === 'buzzer'}
       <div class="row">
         <div class="col">
           <Field
@@ -402,9 +410,6 @@
         <div class="col">
           <p>
             The following songs are supported. Copy the name exactly as written in the list below in the <strong>message subject</strong>.
-            Original found at:
-            <a href="https://github.com/gumslone/raspi_buzzer_player" target="_blank" rel="noopener noreferrer"
-              >https://github.com/gumslone/raspi_buzzer_player</a>
           </p>
           <ul>
             <li>The Final Countdown</li>
@@ -418,6 +423,11 @@
             <li>Star Wars</li>
             <li>Super Mario</li>
           </ul>
+          <p>
+            Original found at:
+            <a href="https://github.com/gumslone/raspi_buzzer_player" target="_blank" rel="noopener noreferrer"
+              >https://github.com/gumslone/raspi_buzzer_player</a>
+          </p>
           <small class="text-muted d-none">
             {$_('services.settings.setup.buzzer.help', { default: 'List of available songs to use in the message subject.' })}
           </small>
@@ -425,7 +435,7 @@
       </div>
     {/if}
 
-    {#if $formData.type == 'webhook'}
+    {#if $formData.type === 'webhook'}
       <div class="row">
         <div class="col">
           <Field
@@ -440,14 +450,14 @@
       </div>
     {/if}
 
-    {#if $formData.type == 'mqtt'}
+    {#if $formData.type === 'mqtt'}
       <div class="row">
         <div class="col">
           <Field
             type="text"
             name="setup.address"
             required="{true}"
-            label="{$_('services.settings.setup.address.label', { default: 'Address' })}"
+            label="{$_('services.settings.setup.address.mqtt.label', { default: 'Server Address' })}"
             placeholder="{$_('services.settings.setup.address.placeholder', { default: 'Enter an address' })}"
             help="{$_('services.settings.setup.address.help', { default: 'Enter an address.' })}"
             invalid="{$_('services.settings.setup.address.invalid', {
@@ -485,9 +495,13 @@
             placeholder="{$_('services.settings.setup.password.placeholder', { default: 'Enter a username' })}"
             help="{$_('services.settings.setup.password.help', { default: 'Enter the server password.' })}" />
         </div>
-        <small class="text-muted d-none ml-2">
-          {$_('services.settings.setup.ssl.mqtt.label', { default: 'The MQTT notification service will auto detect SSL/TLS connections.' })}
-        </small>
+      </div>
+      <div class="row">
+        <div class="col">
+            <small class="text-muted d-none ml-2 w-100 text-center">
+                {$_('services.settings.setup.ssl.mqtt.label', { default: 'The MQTT notification service will auto detect SSL/TLS connections.' })}
+            </small>
+        </div>
       </div>
     {/if}
 

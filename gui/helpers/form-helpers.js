@@ -9,7 +9,7 @@ export const formToJSON = (form) => {
     if (element.disabled) {
       continue;
     }
-    let name = element.name.replace('[]', '');
+    let name = element.name.replace(/\[\]/gm, '');
     if (name) {
       if (element.multiple && element.multiple === true) {
         value = [];
@@ -17,9 +17,13 @@ export const formToJSON = (form) => {
           value.push(item.value);
         }
       } else if (element.type === 'checkbox') {
-        value = element.checked && element.value ? (!isNaN(element.value) ? parseFloat(element.value) : element.value) : element.checked;
+        value = element.checked && element.value ? (!isNaN(parseFloat(element.value)) ? parseFloat(element.value) : element.value) : element.checked;
+      } else if (element.type === 'number') {
+        value = !isNaN(parseFloat(element.value)) ? parseFloat(element.value) : 0;
+      } else if (element.value !== '' && (element.value[0] === '+' || element.value[0] === '-')) {
+        value = element.value
       } else {
-        value = element.value != '' && !element.value.startsWith('0x') && !isNaN(element.value) ? parseFloat(element.value) : element.value;
+        value = element.value !== '' && !element.value.startsWith('0x') && !isNaN(parseFloat(element.value)) ? parseFloat(element.value) : element.value;
       }
 
       if (value === 'true') {
@@ -45,7 +49,7 @@ export const formToJSON = (form) => {
 export const invalid_form_fields = (form) => {
   let fields = [];
   form.querySelectorAll(':invalid').forEach((item) => {
-    fields.push(form.querySelector('label[for="' + item.id + '"]').textContent.replace('*', ''));
+    fields.push(form.querySelector('label[for="' + item.id + '"]').textContent.replace(/\*/gm, ''));
   });
   return fields;
 };

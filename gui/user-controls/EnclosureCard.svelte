@@ -2,13 +2,17 @@
   import { dayjs } from 'svelte-time';
   import duration from 'dayjs/esm/plugin/duration';
   dayjs.extend(duration);
-  import { getContext } from 'svelte';
+  import { onMount, getContext } from 'svelte';
   import { _, time, date } from 'svelte-i18n';
+
+  import { Fancybox } from '@fancyapps/ui';
+  import '@fancyapps/ui/dist/fancybox/fancybox.css';
 
   import { template_sensor_type_color, template_sensor_type_icon } from '../helpers/icon-helpers';
   import { roundToPrecision } from '../helpers/number-helpers';
   import { getCustomConfig } from '../config';
   import { ApiUrl } from '../constants/urls';
+  import { fancyAppsLanguage } from '../constants/ui';
   import { updateButton, isDarkInterface } from '../stores/terrariumpi';
   import { isAuthenticated } from '../stores/authentication';
   import { externalLinks } from '../helpers/string-helpers';
@@ -24,6 +28,12 @@
   const { deleteAction, deleteArea } = getContext('enclosureActions');
 
   let last_update = null;
+
+  onMount(() => {
+    Fancybox.bind("[data-fancybox]", {
+      l10n: fancyAppsLanguage(),
+    });
+  });
 
   $: if (enclosure.doors) {
     enclosure.doors.map((door) => updateButton({ ...door, ...{ enclosure: enclosure.id } }));
@@ -108,7 +118,10 @@
                     {settings.units[area.type].value},
                     {$_('enclosures.area.now', { default: 'now' })}: {roundToPrecision(area.state.sensors.current)}
                     {settings.units[area.type].value}
-                    <i class="fas fa-exclamation-triangle text-danger mt-1 ml-2" class:d-none="{!area.state.sensors.alarm}"> </i>
+                    <i class="fas fa-exclamation-triangle text-secondary mt-1 ml-2"
+                        class:text-danger="{(area.state.sensors?.alarm_low  && area.setup.low.relays.length  > 0)
+                                         || (area.state.sensors?.alarm_high && area.setup.high.relays.length > 0)}"
+                        class:d-none="{!area.state.sensors.alarm}"> </i>
                   {:else}
                     {#each ['day', 'night', 'low', 'high'] as period}
                       {#if area.state[period] && area.state[period].begin}
@@ -207,7 +220,6 @@
 {/if}
 
 <style>
-  @import '@fancyapps/ui/dist/fancybox.css';
   .profile_image {
     width: 200px;
   }

@@ -20,7 +20,7 @@
   let validated = false;
 
   let hardware = [];
-  let calibration = false;
+  let calibration = true;
   let selected_hardware = null;
   let formData = writable({});
 
@@ -34,7 +34,6 @@
 
   const hardwareType = (hardware) => {
     selected_hardware = hardware;
-    calibration = ['ldr', 'remote'].indexOf(selected_hardware) !== -1;
   };
 
   const _processForm = async (values, context) => {
@@ -140,14 +139,14 @@
   </svelte:fragment>
 
   <form class="needs-validation" class:was-validated="{validated}" use:form bind:this="{editForm}">
-    <input type="hidden" name="id" disabled="{$formData.id && $formData.id != '' ? null : true}" />
+    <input type="hidden" name="id" disabled="{$formData.id && $formData.id !== '' ? null : true}" />
 
     <div class="row">
       <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <Select
           name="hardware"
           value="{$formData.hardware}"
-          readonly="{$formData.id && $formData.id != ''}"
+          readonly="{$formData.id && $formData.id !== ''}"
           on:change="{(value) => hardwareType(value.detail)}"
           required="{true}"
           options="{hardware}"
@@ -201,6 +200,15 @@
       </a>
       <div class="col">
         <div class="collapse row pt-3" id="button_callibration">
+            <div class="col-6 col-sm-6 col-md-6 col-lg-3">
+                <Switch
+                  name="calibration.inverse"
+                  value={$formData.calibration?.inverse}
+                  label="{$_('buttons.settings.calibration.inverse.label', { default: 'Inverse value' })}"
+                  help="{$_('buttons.settings.calibration.inverse.help', {
+                    default: 'Toggle to inverse the remote value.',
+                  })}" />
+            </div>
             <div class="col-6 col-sm-6 col-md-6 col-lg-3"  class:d-none={selected_hardware !== 'ldr'}>
               <Field
                 type="number"
@@ -219,7 +227,7 @@
                   values: { min: 1, max: 100 },
                 })}" />
             </div>
-            <div class="col-6 col-sm-6 col-md-6 col-lg-3" class:d-none={selected_hardware !== 'remote'}>
+            <div class="col-6 col-sm-6 col-md-6 col-lg-4" class:d-none={selected_hardware !== 'remote'}>
               <Field
                 type="number"
                 name="calibration.timeout"
@@ -234,16 +242,6 @@
                 invalid="{$_('buttons.settings.calibration.timeout.invalid', {
                   default: 'The entered timeout value is not valid. Enter a valid number between {min} and {max}.',
                   values: { min: 1, max: 100 },
-                })}" />
-            </div>
-            <div class="col-6 col-sm-6 col-md-6 col-lg-3" class:d-none={selected_hardware !== 'remote'}>
-              <Switch
-                name="calibration.inverse"
-                value={$formData.calibration?.inverse}
-                disabled={selected_hardware !== 'remote'}
-                label="{$_('buttons.settings.calibration.inverse.label', { default: 'Inverse value' })}"
-                help="{$_('buttons.settings.calibration.inverse.help', {
-                  default: 'Toggle to inverse the remote value.',
                 })}" />
             </div>
         </div>

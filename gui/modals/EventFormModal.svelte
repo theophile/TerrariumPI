@@ -22,14 +22,14 @@
 
   let repeat = false;
   let formData = writable({});
-  let mode = 'repeat'; // TODO: Fix this. Need to work with the hardware reminder functionality
+  let mode = 'reminder';
 
   let editForm;
 
   const event_periods = [
     {
       text:
-        mode == 'repeat'
+        mode === 'repeat'
           ? $_('calendar.event.periods.no_repeat', { default: 'No repeat' })
           : $_('calendar.event.periods.no_reminder', { default: 'No reminder' }),
       value: '_',
@@ -58,6 +58,7 @@
     dispatch('save');
   };
 
+  const uselessEnterEnd = /<br[^>]*><\/p>$/gm;
   const _processForm = async (values, context) => {
     validated = true;
 
@@ -71,6 +72,7 @@
         delete values.interval;
       }
 
+      values.description = values.description.replace(uselessEnterEnd, `<\/p>`);
       values.dtstart /= 1000;
       values.dtend /= 1000;
 
@@ -117,8 +119,8 @@
     // Anonymous (Async) functions always as first!!
     (async () => {
       // If ID is given, load existing data
-
       if (eventData.id) {
+        loading = true;
         await fetchCalendarEvents(eventData.id, (data) => {
           // Use miliseconds
           data.dtstart *= 1000;
@@ -127,26 +129,31 @@
           $formData = data;
         });
         setFields($formData);
-        repeat = $formData.freq != '_';
+        repeat = $formData.freq !== '_';
+        // Loading done
+        loading = false;
       }
-
-      // Loading done
-      loading = false;
     })();
 
-    // Toggle loading div
-    loading = eventData.id != undefined && eventData.id != null;
+    if (eventData.mode) {
+        mode = eventData.mode;
+    } else {
+        mode = 'reminder';
+    }
 
     repeat = false;
 
     // Reset form validation
     reset();
     validated = false;
+    let now = Date.now();
     $formData = {
-      dtstart: Date.parse(eventData.start),
-      dtend: Date.parse(eventData.end),
+      dtstart: eventData.start ? Date.parse(eventData.start) : now,
+      dtend:   eventData.end   ? Date.parse(eventData.end)   : now + 86400000,
       description: '',
       freq: '_',
+      repeatend: 2,
+      ...eventData
     };
     setFields($formData);
 
@@ -177,7 +184,9 @@
   </svelte:fragment>
 
   <form class="needs-validation" class:was-validated="{validated}" use:form bind:this="{editForm}">
-    <input type="hidden" name="id" disabled="{$formData.id && $formData.id != '' ? null : true}" />
+    <input type="hidden" name="id" disabled="{$formData.id && $formData.id !== '' ? null : true}" />
+    <input type="hidden" name="mode" value="{mode}"/>
+    <input type="hidden" name="repeatend" value="2" disabled={'reminder' !== mode}/>
 
     <div class="row">
       <div class="col-12 col-sm-12 col-md-9 col-lg-9">
@@ -217,9 +226,9 @@
           value="{$formData.freq}"
           options="{event_periods}"
           on:change="{(value) => {
-            repeat = value.detail != '_';
+            repeat = value.detail !== '_';
           }}"
-          label="{mode == 'repeat'
+          label="{mode === 'repeat'
             ? $_('calendar.event.settings.repeat.label', { default: 'Repeat every' })
             : $_('calendar.event.settings.remind.label', { default: 'Remind in' })}"
           help="{$_('calendar.event.settings.repeat.help', { default: 'Select a repeat period and an amount.' })}"

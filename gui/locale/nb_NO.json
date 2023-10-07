@@ -30,6 +30,12 @@
         "label": "Når lukket",
         "placeholder": "Velg kabinett"
       },
+      "light_sensors": {
+        "help": "",
+        "invalid": "",
+        "label": "",
+        "placeholder": ""
+      },
       "mode": {
         "help": "Velg modusen for dette området. Dette vil endre tidspunktet og varigheten til reléene.",
         "invalid": "Vennligst ta et valg.",
@@ -49,6 +55,12 @@
         "invalid": "Det angitte navnet er ikke gyldig. Den kan ikke være tom.",
         "label": "Navn",
         "placeholder": "Brukernavn"
+      },
+      "relay": {
+        "slider": {
+          "delay": "Forsinkelse: {delay} minutter.",
+          "duration": "Forsinkelse: {delay} minutter. Varighet: {duration} minutter"
+        }
       },
       "save": {
         "error": {
@@ -76,6 +88,17 @@
           },
           "placeholder": "Dag/natt kilde"
         },
+        "depend_on_relays_mode": {
+          "all": {
+            "label": ""
+          },
+          "none": {
+            "label": ""
+          },
+          "one": {
+            "label": ""
+          }
+        },
         "deviation_high_alarm": {
           "help": "",
           "invalid": "Skriv inn et gyldig nummer.",
@@ -94,6 +117,18 @@
             "invalid": "Dato og tid.",
             "label": "Dato og tid",
             "placeholder": "Dato og tid"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Arkiver dør status.",
@@ -200,6 +235,18 @@
             "invalid": "Dato og tid.",
             "label": "Dato og tid",
             "placeholder": "Dato og tid"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "Arkiver dør status.",
@@ -421,6 +468,11 @@
           "ok": {
             "message": "Lastet opp {amount, plural, =1 {# lydfil} other {# lydfiler}}"
           }
+        },
+        "upload": {
+          "error": {
+            "nologin": ""
+          }
         }
       },
       "title": "Lydfiler"
@@ -480,6 +532,7 @@
         },
         "title": "Innstillinger for webkamera",
         "volume": {
+          "formatter": "Lydvolumnivå: {value}",
           "help": "Viser volumet for denne spillelisten.",
           "label": "Lydfiler"
         }
@@ -938,6 +991,9 @@
   },
   "modal": {
     "confirm": {
+      "docker": {
+        "not_available": "Denne funksjonen er ikke mulig i et Docker-oppsett."
+      },
       "relays": {
         "scan": "Dette vil starte en ny skanning for å finne nye releer. Dette kan ta opptil 30 sekunder."
       },
@@ -963,6 +1019,9 @@
     "general": {
       "close": "Lukk",
       "save": "Lagre"
+    },
+    "loading": {
+      "title": "Laster"
     },
     "login": {
       "error": "Ugyldig innlogging",
@@ -1260,6 +1319,11 @@
       "uvb": "Gjennomsnittlig UVB",
       "uvi": "Gjennomsnittlig UV-indeks"
     },
+    "calibration": {
+      "light_on_off_threshold": {
+        "light_bulb": ""
+      }
+    },
     "co2": {
       "menu": {
         "title": "CO2"
@@ -1375,6 +1439,11 @@
           "help": "Angi minimum fuktighetsverdi.",
           "invalid": "Den angitte verdien er ikke gyldig. Det må være nummer høyere enn {min}.",
           "label": "Maksimal fukt verdi"
+        },
+        "light_threshold": {
+          "help": "",
+          "invalid": "",
+          "label": ""
         },
         "offset": {
           "help": "Viser lydkortet som brukes til å spille av lyd.",
@@ -1886,6 +1955,12 @@
       "settings": "Legg til nytt webkamera"
     },
     "archive": {
+      "modal": {
+        "loading": {
+          "status": "For øyeblikket innlastede {total} bilder ... ({percentage}%)",
+          "title": "Begynner å laste inn arkivbilder for webkamera ..."
+        }
+      },
       "no_images": "Ingen arkivbilder tilgjengelig"
     },
     "confirm": {

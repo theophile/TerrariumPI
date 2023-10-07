@@ -25,6 +25,10 @@
 
   let editForm;
 
+  const formatter = (value) => {
+    return $_('audio.playlists.settings.volume.formatter', { default: "Volume level {value}", values: { value: value } });
+  };
+
   const dispatch = createEventDispatcher();
 
   const successAction = () => {
@@ -139,7 +143,7 @@
   </svelte:fragment>
 
   <form class="needs-validation" class:was-validated="{validated}" use:form bind:this="{editForm}">
-    <input type="hidden" name="id" disabled="{$formData.id && $formData.id != '' ? null : true}" />
+    <input type="hidden" name="id" disabled="{$formData.id && $formData.id !== '' ? null : true}" />
 
     <div class="row">
       <div class="col-10 col-sm-10 col-md-8 col-lg-4">
@@ -156,7 +160,8 @@
         <Slider
           name="volume"
           required="{true}"
-          value="{$formData.volume}"
+          value="{$formData.volume && $formData.volume !== '' ? $formData.volume : 0}"
+          formatter={formatter}
           label="{$_('audio.playlists.settings.volume.label', { default: 'Audio volume' })}"
           help="{$_('audio.playlists.settings.volume.help', { default: 'Select the volume for this playlist.' })}" />
       </div>

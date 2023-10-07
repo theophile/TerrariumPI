@@ -30,6 +30,12 @@
         "label": "Klatka",
         "placeholder": "Wybierz obudowę"
       },
+      "light_sensors": {
+        "help": "Wybierz czujniki świateł, aby wykrywać, czy światła są włączone.",
+        "invalid": "Proszę, dokonaj wyboru.",
+        "label": "Czujniki wykrywające światło",
+        "placeholder": "Wybierz czujniki światła"
+      },
       "mode": {
         "help": "Wybierz tryb dla tego obszaru. To zmieni czas i długość załączenia przekaźników.",
         "invalid": "Dokonaj wyboru.",
@@ -49,6 +55,12 @@
         "invalid": "Wprowadzona nazwa jest nieprawidłowa. Nie może być pusty.",
         "label": "Imię",
         "placeholder": "Wpisz imię"
+      },
+      "relay": {
+        "slider": {
+          "delay": "Opóźnienie: {delay} min.",
+          "duration": "Opóźnienie: {delay} min. Czas trwania: {duration} minut"
+        }
       },
       "save": {
         "error": {
@@ -76,8 +88,19 @@
           },
           "placeholder": "Żródło dnia/nocy"
         },
+        "depend_on_relays_mode": {
+          "all": {
+            "label": "Wszystkie"
+          },
+          "none": {
+            "label": "Żaden"
+          },
+          "one": {
+            "label": "Co najmniej jeden"
+          }
+        },
         "deviation_high_alarm": {
-          "help": "",
+          "help": "Zwiększenie lub zmniejszenie wartości alarmu wysokiego.",
           "invalid": "Wprowadź prawidłowy numer.",
           "label": "Wysokie odchylenie alarmu",
           "placeholder": "Wysokie odchylenie alarmu"
@@ -94,6 +117,18 @@
             "invalid": "Wprowadź poprawny czas dnia.",
             "label": "Czas rozpoczęcia",
             "placeholder": "Wprowadź czas rozpoczęcia"
+          },
+          "depend_on_relays": {
+            "help": "Wybierz przekaźniki, od których zależą te przekaźniki.",
+            "invalid": "Dokonaj wyboru.",
+            "label": "Zależne od przekaźników",
+            "placeholder": "Wybierz przekaźniki"
+          },
+          "depend_on_relays_mode": {
+            "help": "Wybór trybu zależnego",
+            "invalid": "Dokonaj wyboru.",
+            "label": "Tryb zależny",
+            "placeholder": "Wybierz tryb"
           },
           "door_status": {
             "help": "Status wszystkich drzwi.",
@@ -113,7 +148,7 @@
             "placeholder": "Wprowadź czas zakończenia"
           },
           "ignore_high": {
-            "help": ".",
+            "help": "Przełącz, aby ignorować wysoką wartość alarmu czujników i używać tylko niskiej wartości alarmu.",
             "label": "Alarm wysoki"
           },
           "light_status": {
@@ -200,6 +235,18 @@
             "invalid": "Wprowadź poprawny czas dnia.",
             "label": "Czas rozpoczęcia",
             "placeholder": "Wprowadź czas rozpoczęcia"
+          },
+          "depend_on_relays": {
+            "help": "Wybierz przekaźniki, od których zależą te przekaźniki.",
+            "invalid": "Dokonaj wyboru.",
+            "label": "Zależne od przekaźników",
+            "placeholder": "Wybierz przekaźniki"
+          },
+          "depend_on_relays_mode": {
+            "help": "Wybierz tryb zależny",
+            "invalid": "Proszę, dokonaj wyboru.",
+            "label": "Tryb zależny",
+            "placeholder": "Wybierz tryb działania"
           },
           "door_status": {
             "help": "Status wszystkich drzwi.",
@@ -377,13 +424,13 @@
         "watertank_offset": {
           "help": "Wprowadź przesunięcie między czujnikiem a wysokością wody.",
           "invalid": "Podaj wartość w zakresie pomiędzy {value} i %s.",
-          "label": "Prezesunięcie",
+          "label": "Przesunięcie",
           "placeholder": "Wpisz numer"
         },
         "watertank_volume": {
           "help": "Wprowadź poprawny czas dnia.",
           "invalid": "Podaj wartość w zakresie pomiędzy {value} i %s.",
-          "label": "objętość",
+          "label": "Objętość wody",
           "placeholder": "Wpisz numer"
         }
       },
@@ -420,6 +467,11 @@
           },
           "ok": {
             "message": "Przesłano {amount, plural, =1 {# plik audio} other {# pliki audio}}"
+          }
+        },
+        "upload": {
+          "error": {
+            "nologin": "Zaloguj się, aby przesłać pliki."
           }
         }
       },
@@ -480,6 +532,7 @@
         },
         "title": "Ustawienia listy odtwarzania",
         "volume": {
+          "formatter": "Poziom głośności dźwięku: {value}",
           "help": "Wybierz głośność tej listy odtwarzania.",
           "label": "Pliki audio"
         }
@@ -534,8 +587,8 @@
       },
       "calibration": {
         "inverse": {
-          "help": "",
-          "label": ""
+          "help": "Przełącz, aby odwrócić wartość zdalną.",
+          "label": "Wartość odwrotna"
         },
         "ldr_capacitor": {
           "help": "Wprowadź wartość kondensatora w µF, ponieważ wpłynie to na obliczenie światła.",
@@ -544,10 +597,10 @@
           "placeholder": "Wprowadź wartość kondensatora w µF"
         },
         "timeout": {
-          "help": "",
-          "invalid": "",
-          "label": "",
-          "placeholder": ""
+          "help": "Wprowadź limit czasu w sekundach pomiędzy zdalnymi kontrolami.",
+          "invalid": "Wprowadzona wartość limitu czasu jest nieprawidłowa. Wprowadź prawidłową liczbę z przedziału od {min} do {max}.",
+          "label": "Limit czasu w sekundach",
+          "placeholder": "Wprowadź limit czasu w sekundach"
         }
       },
       "current": {
@@ -852,7 +905,7 @@
     "settings": {
       "export": "Export"
     },
-    "wattage": "Wattage"
+    "wattage": "Moc"
   },
   "home": {
     "menu": {
@@ -893,7 +946,7 @@
         "placeholder": "Wprowadź wiadomość"
       },
       "placeholders": {
-        "format": "Wartości liczb można zaokrąglić za pomocą {link_start} `.: 2f` format {link_end}",
+        "format": "Użyj formatu {placeholder}, aby użyć symbolu zastępczego poniżej w wiadomości.{new_line}Wartości liczbowe mogą być zaokrąglane przy użyciu formatu {link_start}`.:2f`{link_end}",
         "help": "Lista dostępnych symboli zastępczych.",
         "label": "Posiadacze miejsca"
       },
@@ -938,6 +991,9 @@
   },
   "modal": {
     "confirm": {
+      "docker": {
+        "not_available": "Ta funkcja nie jest możliwa w konfiguracji platformy Docker."
+      },
       "relays": {
         "scan": "To rozpocznie nowy skan, aby znaleźć nowe przekaźniki. Może to potrwać do 30 sekund."
       },
@@ -963,6 +1019,9 @@
     "general": {
       "close": "Zamknij",
       "save": "Ratować"
+    },
+    "loading": {
+      "title": "Ładowanie"
     },
     "login": {
       "error": "Nieprawidłowy login",
@@ -1014,8 +1073,8 @@
     },
     "door": {
       "status": {
-        "closed": "",
-        "open": "",
+        "closed": "Drzwi ''{nazwa}'' zamknięte",
+        "open": "Drzwi ''{nazwa}'' otwarte",
         "title": "Aktualizacja statusu drzwi"
       }
     },
@@ -1214,7 +1273,7 @@
       "wattage": {
         "help": "Wprowadź (maks. ) Watwa po włączeniu.",
         "invalid": "Podaj wartość w zakresie pomiędzy {value} i %s.",
-        "label": "Wattage"
+        "label": "Moc"
       }
     },
     "title": "Przełączniki",
@@ -1260,6 +1319,11 @@
       "uvb": "Średni UVB",
       "uvi": "Średni wskaźnik UV"
     },
+    "calibration": {
+      "light_on_off_threshold": {
+        "light_bulb": "Podświetlenie wartości progowej: {threshold}"
+      }
+    },
     "co2": {
       "menu": {
         "title": "CO2"
@@ -1284,7 +1348,7 @@
     },
     "distance": {
       "menu": {
-        "title": "odległość"
+        "title": "Odległość"
       },
       "title": "Czujniki odległości"
     },
@@ -1375,6 +1439,11 @@
           "help": "Wprowadź minimalną wartość wilgotną.",
           "invalid": "Wprowadzona wartość jest nieprawidłowa. Musi być liczba wyższa niż {min}.",
           "label": "Minimalna wilgotna wartość"
+        },
+        "light_threshold": {
+          "help": "Wprowadź wartość, gdy światła są włączone.",
+          "invalid": "Wprowadzona wartość jest nieprawidłowa. Musi to być liczba wyższa niż {min}.",
+          "label": "Światła na progu"
         },
         "offset": {
           "help": "Wpisz nazwę tej klatki.",
@@ -1659,7 +1728,7 @@
         "options": {
           "changes": "Tylko dla zmian",
           "full": "Pełne uwierzytelnianie",
-          "no_authentication": "Logowanie"
+          "no_authentication": "Brak uwierzytelniania"
         }
       },
       "auto_dark_mode": {
@@ -1886,6 +1955,12 @@
       "settings": "Edytuj kamerę internetową"
     },
     "archive": {
+      "modal": {
+        "loading": {
+          "status": "Aktualnie wczytane obrazy: {total}... ({percentage}%)",
+          "title": "Rozpoczęcie ładowania obrazów z archiwum kamery internetowej..."
+        }
+      },
       "no_images": "Brak dostępnych obrazów archiwum"
     },
     "confirm": {

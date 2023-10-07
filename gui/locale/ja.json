@@ -30,6 +30,12 @@
         "label": "ケージ",
         "placeholder": "エンクロージャーを選択します"
       },
+      "light_sensors": {
+        "help": "",
+        "invalid": "",
+        "label": "",
+        "placeholder": ""
+      },
       "mode": {
         "help": "該当エリアのモードを選択してください。モードによってリレーの起動タイミングや作動時間が変わります。.",
         "invalid": "選択してください。.",
@@ -49,6 +55,12 @@
         "invalid": "入力された名前は無効です。空にすることはできません。.",
         "label": "名",
         "placeholder": "名前を入力します"
+      },
+      "relay": {
+        "slider": {
+          "delay": "遅延: {delay} 分。",
+          "duration": "遅延: {delay} 分。期間: {duration} 分"
+        }
       },
       "save": {
         "error": {
@@ -76,6 +88,17 @@
           },
           "placeholder": "昼/夜のソースを選択します"
         },
+        "depend_on_relays_mode": {
+          "all": {
+            "label": ""
+          },
+          "none": {
+            "label": ""
+          },
+          "one": {
+            "label": ""
+          }
+        },
         "deviation_high_alarm": {
           "help": "",
           "invalid": "有効な数値を入力してください。",
@@ -94,6 +117,18 @@
             "invalid": "正しい時間値を入力してください。.",
             "label": "開始時間",
             "placeholder": "開始時間を入力します"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "ドアの状態を選択してください。.",
@@ -200,6 +235,18 @@
             "invalid": "正しい時間値を入力してください。.",
             "label": "開始時間",
             "placeholder": "開始時間を入力します"
+          },
+          "depend_on_relays": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
+          },
+          "depend_on_relays_mode": {
+            "help": "",
+            "invalid": "",
+            "label": "",
+            "placeholder": ""
           },
           "door_status": {
             "help": "ドアの状態を選択してください。.",
@@ -421,6 +468,11 @@
           "ok": {
             "message": "アップロード {amount, plural, =1 {＃オーディオファイル} other {＃オーディオファイルs}}"
           }
+        },
+        "upload": {
+          "error": {
+            "nologin": ""
+          }
         }
       },
       "title": "音声ファイル"
@@ -480,6 +532,7 @@
         },
         "title": "プレイリスト設定",
         "volume": {
+          "formatter": "音量レベル: {value}",
           "help": "該当プレイリストの音量を選択してください。.",
           "label": "音声ファイル"
         }
@@ -938,6 +991,9 @@
   },
   "modal": {
     "confirm": {
+      "docker": {
+        "not_available": "この機能は、Docker セットアップでは使用できません。"
+      },
       "relays": {
         "scan": "これにより、新しいリレーを見つけるための新しいスキャンが開始されます。これには最大30秒かかる場合があります。"
       },
@@ -963,6 +1019,9 @@
     "general": {
       "close": "閉じる",
       "save": "保存"
+    },
+    "loading": {
+      "title": "読み込み中"
     },
     "login": {
       "error": "不正なログイン",
@@ -1260,6 +1319,11 @@
       "uvb": "平均UVB",
       "uvi": "平均UVインデックス"
     },
+    "calibration": {
+      "light_on_off_threshold": {
+        "light_bulb": ""
+      }
+    },
     "co2": {
       "menu": {
         "title": "CO2"
@@ -1375,6 +1439,11 @@
           "help": "最小湿気の値を入力します。.",
           "invalid": "入力された値は無効です。{min}よりも高い数値である必要があります。.",
           "label": "最低水分値"
+        },
+        "light_threshold": {
+          "help": "",
+          "invalid": "",
+          "label": ""
         },
         "offset": {
           "help": "該当センサーのオフセット値を入力してください。.",
@@ -1886,6 +1955,12 @@
       "settings": "ウェブカメラを編集します"
     },
     "archive": {
+      "modal": {
+        "loading": {
+          "status": "現在ロードされている {total} 枚の画像 ... ({percentage}%)",
+          "title": "ウェブカメラのアーカイブ画像の読み込みを開始しています..."
+        }
+      },
       "no_images": "利用可能なアーカイブ画像はありません"
     },
     "confirm": {

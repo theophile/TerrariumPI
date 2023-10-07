@@ -20,8 +20,8 @@ screenlog.*
 *.old
 *.swp
 .jekyll-cache
-Gemfile.lock
 docs/_site/
+Gemfile.lock
 
 # Logs
 logs

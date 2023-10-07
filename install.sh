@@ -46,6 +46,7 @@ done < requirements.txt
 if [ "${PI_ZERO}" -eq 1 ]; then
   # Pi Zero needs some fixed python modules
   PIP_MODULES="${PIP_MODULES//gevent==+([^ ])/gevent==21.8.0}"
+  PIP_MODULES="${PIP_MODULES//bcrypt==+([^ ])/bcrypt==3.2.2}"
 
   if [ "${BUSTER_OS}" -eq 1 ]; then
     PIP_MODULES="${PIP_MODULES//opencv-python-headless==+([^ ])/opencv-python-headless==4.5.4.60}"
@@ -61,7 +62,6 @@ fi
 # Debian buster does not like numpy or cryptography .... :(
 if [ "${BUSTER_OS}" -eq 1 ]; then
   PIP_MODULES="${PIP_MODULES//numpy==+([^ ])/numpy==1.21.4}"
-  PIP_MODULES="${PIP_MODULES//cryptography==+([^ ])/cryptography==37.0.4}"
 fi
 
 #set -ex

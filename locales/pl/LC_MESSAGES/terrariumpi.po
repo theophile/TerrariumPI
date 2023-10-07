@@ -3,12 +3,13 @@
 # Joshua (TheYOSH) Rubingh, <terrariumpi@theyosh.nl>, 2016-2021.
 # theyosh <github.com@theyosh.nl>, 2022.
 # kwiatekp <kwiatekp@gmail.com>, 2022.
+# Rafal Zagawa <tasdefleja@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: TerrariumPI 4.0.0\n"
-"POT-Creation-Date: 2022-12-27 11:26+CET\n"
-"PO-Revision-Date: 2022-10-12 17:25+0000\n"
-"Last-Translator: kwiatekp <kwiatekp@gmail.com>\n"
+"POT-Creation-Date: 2023-06-02 22:35+CEST\n"
+"PO-Revision-Date: 2023-08-29 16:19+0000\n"
+"Last-Translator: Rafal Zagawa <tasdefleja@gmail.com>\n"
 "Language-Team: Polish <https://weblate.theyosh.nl/projects/terrariumpi/"
 "backend/pl/>\n"
 "Language: pl\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 5.0\n"
 "Generated-By: pygettext.py 1.5\n"
 
 #: terrariumArea.py:32
@@ -148,47 +149,47 @@ msgstr "Moc"
 msgid "powerusage"
 msgstr "Zużycie energii przez Pi"
 
-#: terrariumEngine.py:1183
+#: terrariumEngine.py:1187
 msgid "Up time"
 msgstr "czas działania"
 
-#: terrariumEngine.py:1189
+#: terrariumEngine.py:1193
 msgid "System load"
 msgstr "Obciążenie systemu"
 
-#: terrariumEngine.py:1195
+#: terrariumEngine.py:1199
 msgid "CPU Temperature"
 msgstr "Temperatura Procesora"
 
-#: terrariumEngine.py:1201
+#: terrariumEngine.py:1205
 msgid "Storage"
 msgstr "Pojemność dysku"
 
-#: terrariumEngine.py:1207
+#: terrariumEngine.py:1211
 msgid "Memory"
 msgstr "Pamięć RAM"
 
-#: terrariumEngine.py:1228
+#: terrariumEngine.py:1232
 msgid "average {sensor_type}"
 msgstr "Średnia {sensor_type}"
 
-#: terrariumEngine.py:1312
+#: terrariumEngine.py:1316
 msgid "Version"
 msgstr "Wersja"
 
-#: terrariumEngine.py:1322 terrariumWebserver.py:394
+#: terrariumEngine.py:1326 terrariumWebserver.py:393
 msgid "A new version ({version}) is available!"
 msgstr "Dostępna jest nowa wersja ({version})!"
 
-#: terrariumEngine.py:1366 terrariumEngine.py:1396
+#: terrariumEngine.py:1370 terrariumEngine.py:1400
 msgid "Current active relays"
 msgstr "Obecnie aktywne przekaźniki"
 
-#: terrariumEngine.py:1367
+#: terrariumEngine.py:1371
 msgid "Watt"
 msgstr "Wat"
 
-#: terrariumEngine.py:1405
+#: terrariumEngine.py:1409
 msgid "last update"
 msgstr "ostatnia aktualizacja"
 
@@ -438,50 +439,72 @@ msgstr "Akcja przycisku"
 msgid "Webcam archive"
 msgstr "Archiwum wideo"
 
-#: terrariumNotification.py:428
+#: terrariumNotification.py:222
+msgid "Lights area wrong state"
+msgstr "Nieprawidłowy stan obszaru świateł"
+
+#: terrariumNotification.py:224
+#, fuzzy
+#| msgid "Current power usage"
+msgid "Current power state"
+msgstr "Obecne zużycie energii"
+
+#: terrariumNotification.py:225
+msgid "Sensor measure state"
+msgstr "Stan pomiaru czujnika"
+
+#: terrariumNotification.py:226
+msgid "Enclosure name"
+msgstr ""
+
+#: terrariumNotification.py:227
+msgid "Enclosure running mode"
+msgstr ""
+
+#: terrariumNotification.py:441
 msgid "Display"
 msgstr "Ekran"
 
-#: terrariumNotification.py:432
+#: terrariumNotification.py:445
 msgid "Email"
 msgstr "Email"
 
-#: terrariumNotification.py:442
+#: terrariumNotification.py:455
 msgid "Traffic light"
 msgstr "Sygnalizator"
 
-#: terrariumNotification.py:446
+#: terrariumNotification.py:459
 msgid "Web-hook"
 msgstr "Web-hook"
 
-#: terrariumNotification.py:450
+#: terrariumNotification.py:463
 msgid "MQTT"
 msgstr "MQTT"
 
-#: terrariumNotification.py:454
+#: terrariumNotification.py:467
 msgid "Pushover"
 msgstr "Pushover"
 
-#: terrariumNotification.py:458
+#: terrariumNotification.py:471
 msgid "Buzzer"
 msgstr "Brzęczyk"
 
-#: terrariumWebserver.py:165 terrariumWebserver.py:254
+#: terrariumWebserver.py:165 terrariumWebserver.py:253
 msgid "Authenticate to make any changes"
 msgstr "Zaloguj się by wprowadzić zmiany"
 
-#: terrariumWebserver.py:165 terrariumWebserver.py:254
+#: terrariumWebserver.py:165 terrariumWebserver.py:253
 msgid "Authentication"
 msgstr "Logowanie"
 
-#: terrariumWebserver.py:165 terrariumWebserver.py:254
+#: terrariumWebserver.py:165 terrariumWebserver.py:253
 msgid "TerrariumPI"
 msgstr "TerrariumPI"
 
-#: terrariumWebserver.py:394
+#: terrariumWebserver.py:393
 msgid "Software Update"
 msgstr "Aktualizacja Oprogramowania"
 
-#: terrariumNotification.py:437
+#: terrariumNotification.py:450
 msgid "Telegram"
 msgstr "Telegram"

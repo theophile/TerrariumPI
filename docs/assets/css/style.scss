@@ -10,8 +10,13 @@ $tab-count: {{ site.tabs | size | plus: 1 }}; // plus 1 for home tab
 
 @import "swagger";
 
-div.post-content a.external:after,
-footer a.external:after {
+/* Hide duplicate title ?? */
+h1.dynamic-title {
+    display: none;
+}
+
+div.post-content a.external::after,
+footer a.external::after {
   content: "\f35d";
   padding-left: 0.2rem;
   font-family: "Font Awesome 5 Free";
@@ -19,9 +24,32 @@ footer a.external:after {
   font-size: 0.75rem;
 }
 
-html[mode="dark"] img.is_dimmer {
-  -webkit-filter: invert(100%);
+div.post-content .share-icons a.external::after {
+    content: none;
+}
+
+/* Social media icons left bottom menu */
+
+#sidebar .sidebar-bottom a:not(:last-child) {
+  margin-right: 0.6rem !important;
+}
+
+
+/*
+html[mode="dark"] img.is_dimmer,
+html[mode="dark"] a.invert img {
   filter: invert(100%);
+}
+
+html[data-mode="dark"] img.is_dimmer,
+html[data-mode="dark"] a.invert img {
+  filter: invert(100%);
+}
+*/
+
+/* Overrule aspect ration header image */
+div.post-meta .preview-img {
+  aspect-ratio: auto;
 }
 
 ul.jekyllcodex_accordion {padding-left: 0rem; position: relative; margin: 1.4rem 0!important; border-bottom: 1px solid rgba(0,0,0,0.25); padding-bottom: 0;}

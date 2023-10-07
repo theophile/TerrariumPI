@@ -8,6 +8,7 @@
   import {
     fetchEnclosures,
     fetchAreaTypes,
+    fetchButtons,
     fetchRelays,
     fetchSoundcards,
     fetchPlaylists,
@@ -39,6 +40,7 @@
   let playlists = [];
   let sensors = [];
   let areas = [];
+  let buttons = [];
 
   let sensor_filter = [];
   let showSensorDeviation = false;
@@ -48,6 +50,13 @@
 
   let editForm;
 
+  const formatter = (value) => {
+    if (undefined !== value.length && 2 === value.length) {
+      return $_('areas.settings.relay.slider.duration', { default: "Delay: {delay} minutes. Duration: {duration} minutes", values: { delay: value[0], duration: value[1] - value[0] } });
+    }
+    return $_('areas.settings.relay.slider.delay', { default: "Delay: {delay} minutes.", values: { delay: value } });
+  };
+
   const dispatch = createEventDispatcher();
 
   const successAction = () => {
@@ -56,16 +65,16 @@
 
   const relayName = (id) => {
     let relay = relays.filter((item) => {
-      return item.id == id;
+      return item.id === id;
     });
-    return relay.length == 1 ? relay[0].name : '';
+    return relay.length === 1 ? relay[0].name : '';
   };
 
   const relayDimmer = (id) => {
     let relay = relays.filter((item) => {
-      return item.id == id;
+      return item.id === id;
     });
-    return relay.length == 1 ? relay[0].dimmer : false;
+    return relay.length === 1 ? relay[0].dimmer : false;
   };
 
   const tweakValue = (value, defaultValue) => {
@@ -92,13 +101,13 @@
       // Cleanup deleted relays (filter out non selected relays)
       if (tweaks.length > 0) {
         tweaks = tweaks.filter((relay) => {
-          return new_relays.indexOf(relay.id) != -1;
+          return new_relays.indexOf(relay.id) !== -1;
         });
       }
       // Add new relays (filter out non existing relays and add them)
       new_relays
         .filter((relay_id) => {
-          return existing_relays.length == 0 || existing_relays.indexOf(relay_id) == -1;
+          return existing_relays.length === 0 || existing_relays.indexOf(relay_id) === -1;
         })
         .map((item) => {
           tweaks.push({ id: item });
@@ -131,7 +140,7 @@
     $formData.type = area;
     sensor_filter = [];
     area_types
-      .filter((item) => item.value == area)
+      .filter((item) => item.value === area)
       .map((item) => {
         sensor_filter = [...sensor_filter, ...item.sensors];
       });
@@ -187,12 +196,18 @@
     }
 
     if (editForm.checkValidity()) {
+      let formOk = true;
       values = formToJSON(editForm);
+
       // Check if we have selected relays multiple times in the low and high alarm parts
-      if (!values.setup.low.relays.some((item) => values.setup.high.relays.includes(item))) {
+      if (values.setup.low.relays) {
+        formOk = !values.setup.low.relays.some((item) => values.setup.high.relays.includes(item))
+      }
+
+      if (formOk) {
         loading = true;
 
-        if (values.type == 'lights' || values.type == 'audio') {
+        if (values.type === 'lights' || values.type === 'audio') {
           values.setup.day = { ...values.setup.low };
           values.setup.night = { ...values.setup.high };
 
@@ -200,7 +215,10 @@
           delete values.setup.high;
         }
 
-        if (values.setup.variation.length == 1 && values.setup.variation[0].period == '' && values.setup.variation[0].value == '' && values.setup.variation[0].when == '') {
+        // Filter the variation data so that every item should be filled, else the variation is invalid and will be deleted
+        // This can also be used to clear the first line
+        values.setup.variation = values.setup.variation.filter((item) => Object.values(item).every(value => value && value !== ''));
+        if (values.setup.variation.length === 0) {
           delete values.setup.variation;
         }
 
@@ -296,7 +314,14 @@
           false,
           (data) =>
             (sensors = data.map((item) => {
-              return { value: item.id, text: item.name, type: item.type };
+              return { value: item.id, text: item.name, type: item.type, calibration: item.calibration };
+            }))
+        ),
+        fetchButtons(
+          false,
+          (data) =>
+            (buttons = data.map((item) => {
+              return { value: item.id, text: item.name, type: item.hardware };
             }))
         ),
         fetchAreas(
@@ -314,7 +339,7 @@
         await fetchAreas(areaId, (data) => {
           // If we have lights or audio type, we need to translate day to low, and night to high
           // Do it also here, before assigning to `$formData`. Else you will get errors... :(
-          if (data.type == 'lights' || data.type == 'audio') {
+          if (data.type === 'lights' || data.type === 'audio') {
             data.setup.low = { ...data.setup.day };
             data.setup.high = { ...data.setup.night };
 
@@ -453,14 +478,14 @@
   </svelte:fragment>
 
   <form class="needs-validation" class:was-validated="{validated}" use:form bind:this="{editForm}">
-    <input type="hidden" name="id" disabled="{$formData.id && $formData.id != '' ? null : true}" />
+    <input type="hidden" name="id" disabled="{$formData.id && $formData.id !== '' ? null : true}" />
 
     <div class="row">
       <div class="col-12 col-sm-3 col-md-3 col-lg-3">
         <Select
           name="enclosure"
           value="{$formData.enclosure}"
-          readonly="{$formData.id && $formData.id != ''}"
+          readonly="{$formData.id && $formData.id !== ''}"
           required="{true}"
           options="{enclosures}"
           sort="{true}"
@@ -473,7 +498,7 @@
         <Select
           name="type"
           value="{$formData.type}"
-          readonly="{$formData.id && $formData.id != ''}"
+          readonly="{$formData.id && $formData.id !== ''}"
           on:change="{(value) => areaType(value.detail)}"
           required="{true}"
           options="{area_types}"
@@ -493,14 +518,32 @@
           invalid="{$_('areas.settings.name.invalid', { default: 'The entered name is not valid. It cannot be empty.' })}" />
       </div>
 
-      {#if $formData.type != 'lights'}
+      {#if $formData.type === 'lights'}
+        <div class="col-12 col-sm-3 col-md-3 col-lg-3">
+          <Select
+            name="setup.light_sensors"
+            value="{$formData.setup?.light_sensors}"
+            multiple="{true}"
+            options="{[...sensors.filter((item) => {
+                             return item.type === 'light' && item.calibration?.light_on_off_threshold > 0;
+                          }),
+                       ...buttons.filter((item) => {
+                            return item.type === 'ldr';
+                     })]}"
+            sort="{true}"
+            label="{$_('areas.settings.light_sensors.label', { default: 'Light detecting sensors' })}"
+            placeholder="{$_('areas.settings.light_sensors.placeholder', { default: 'Select light sensors' })}"
+            help="{$_('areas.settings.light_sensors.help', { default: 'Select the lights sensors to detect if the lights are on.' })}"
+            invalid="{$_('areas.settings.light_sensors.invalid', { default: 'Please make a choice.' })}" />
+        </div>
+      {:else}
         <div class="col-12 col-sm-3 col-md-3 col-lg-3">
           <Select
             name="setup.depends_on"
             value="{$formData.setup?.depends_on}"
             multiple="{true}"
             options="{areas.filter((item) => {
-              return item.value != $formData.id;
+                return item.value !== $formData.id;
             })}"
             sort="{true}"
             label="{$_('areas.settings.depends_on.label', { default: 'Depends on' })}"
@@ -514,10 +557,10 @@
     <div class="row">
       <div
         class="col-12 col-sm-6"
-        class:col-md-4="{['lights', 'audio'].indexOf($formData.type) != -1}"
-        class:col-lg-4="{['lights', 'audio'].indexOf($formData.type) != -1}"
-        class:col-md-3="{['lights', 'audio'].indexOf($formData.type) == -1}"
-        class:col-lg-3="{['lights', 'audio'].indexOf($formData.type) == -1}">
+        class:col-md-4="{['lights', 'audio'].indexOf($formData.type) !== -1}"
+        class:col-lg-4="{['lights', 'audio'].indexOf($formData.type) !== -1}"
+        class:col-md-3="{['lights', 'audio'].indexOf($formData.type) === -1}"
+        class:col-lg-3="{['lights', 'audio'].indexOf($formData.type) === -1}">
         <Select
           name="mode"
           value="{$formData.mode}"
@@ -528,12 +571,12 @@
             {
               value: 'main_lights',
               text: $_('areas.settings.mode.options.main_lights', { default: 'Main lights' }),
-              disabled: ['lights'].indexOf($formData.type) != -1,
+              disabled: ['lights'].indexOf($formData.type) !== -1,
             },
             {
               value: 'sensors',
               text: $_('areas.settings.mode.options.sensors', { default: 'Sensors' }),
-              disabled: ['lights', 'audio'].indexOf($formData.type) != -1,
+              disabled: ['lights', 'audio'].indexOf($formData.type) !== -1,
             },
             { value: 'timer', text: $_('areas.settings.mode.options.timer', { default: 'Timer' }) },
             { value: 'weather', text: $_('areas.settings.mode.options.weather', { default: 'Weather day/night' }), disabled : weather === null || weather.location === undefined },
@@ -548,7 +591,7 @@
       </div>
 
       <!-- Lights area  -->
-      {#if ['lights'].indexOf($formData.type) != -1}
+      {#if ['lights'].indexOf($formData.type) !== -1}
         <div class="col-12 col-sm-6 col-md-3 col-lg-2">
           <Field
             type="number"
@@ -556,8 +599,8 @@
             step="0.001"
             min="0"
             max="24"
-            required="{['weather', 'weather_inverse'].indexOf($formData.mode) != -1}"
-            readonly="{['weather', 'weather_inverse'].indexOf($formData.mode) == -1}"
+            required="{['weather', 'weather_inverse'].indexOf($formData.mode) !== -1}"
+            readonly="{['weather', 'weather_inverse'].indexOf($formData.mode) === -1}"
             label="{$_('areas.settings.setup.min_day_hours.label', { default: 'Minimum hours' })}"
             placeholder="{$_('areas.settings.setup.min_day_hours.placeholder', { default: 'Enter number' })}"
             help="{$_('areas.settings.setup.min_day_hours.help', {
@@ -576,8 +619,8 @@
             step="0.001"
             min="0"
             max="24"
-            required="{['weather', 'weather_inverse'].indexOf($formData.mode) != -1}"
-            readonly="{['weather', 'weather_inverse'].indexOf($formData.mode) == -1}"
+            required="{['weather', 'weather_inverse'].indexOf($formData.mode) !== -1}"
+            readonly="{['weather', 'weather_inverse'].indexOf($formData.mode) === -1}"
             label="{$_('areas.settings.setup.max_day_hours.label', { default: 'Maximum hours' })}"
             placeholder="{$_('areas.settings.setup.max_day_hours.placeholder', { default: 'Enter number' })}"
             help="{$_('areas.settings.setup.max_day_hours.help', {
@@ -596,8 +639,8 @@
             step="0.001"
             min="-12"
             max="12"
-            required="{['weather', 'weather_inverse'].indexOf($formData.mode) != -1}"
-            readonly="{['weather', 'weather_inverse'].indexOf($formData.mode) == -1}"
+            required="{['weather', 'weather_inverse'].indexOf($formData.mode) !== -1}"
+            readonly="{['weather', 'weather_inverse'].indexOf($formData.mode) === -1}"
             label="{$_('areas.settings.setup.shift_day_hours.label', { default: 'Hours shift' })}"
             placeholder="{$_('areas.settings.setup.shift_day_hours.placeholder', { default: 'Enter number' })}"
             help="{$_('areas.settings.setup.shift_day_hours.help', {
@@ -621,7 +664,7 @@
       <!-- End Lights area  -->
 
       <!-- Audio area  -->
-      {#if $formData.type == 'audio'}
+      {#if $formData.type === 'audio'}
         <div class="col-12 col-sm-9 col-md-8 col-lg-8">
           <Select
             name="setup.soundcard"
@@ -636,14 +679,14 @@
       {/if}
       <!-- End Audio area  -->
 
-      {#if ['lights', 'audio'].indexOf($formData.type) == -1}
+      {#if ['lights', 'audio'].indexOf($formData.type) === -1}
         <div class="col-12 col-sm-6 col-md-3 col-lg-3">
           <Select
             name="setup.sensors"
             value="{$formData.setup?.sensors}"
             multiple="{true}"
-            required="{$formData.mode == 'sensors'}"
-            options="{sensors.filter((item) => sensor_filter.length == 0 || sensor_filter.indexOf(item.type) != -1)}"
+            required="{$formData.mode === 'sensors'}"
+            options="{sensors.filter((item) => sensor_filter.length === 0 || sensor_filter.indexOf(item.type) !== -1)}"
             on:change="{(value) => (showSensorDeviation = value.detail.length > 0)}"
             label="{$_('areas.settings.setup.sensors.label', { default: 'Sensors' })}"
             placeholder="{$_('areas.settings.setup.sensors.placeholder', { default: 'Select sensors' })}"
@@ -652,7 +695,7 @@
         </div>
       {/if}
 
-      {#if ['lights', 'audio', 'watertank'].indexOf($formData.type) == -1}
+      {#if ['lights', 'audio', 'watertank'].indexOf($formData.type) === -1}
         <div class="col col-12 col-sm-6 col-md-3 col-lg-3">
           <Field
             type="number"
@@ -681,7 +724,7 @@
       {/if}
 
       <!-- Watertank -->
-      {#if $formData.type == 'watertank'}
+      {#if $formData.type === 'watertank'}
         <div class="col col-12 col-sm-6 col-md-2 col-lg-2">
           <Field
             type="number"
@@ -762,20 +805,20 @@
         <nav class="mb-2">
           <div class="nav nav-tabs" role="tablist">
             <a class="nav-item nav-link active" id="low-tab" data-toggle="tab" href="#low-tab-pane" role="tab" aria-controls="day">
-              {#if ['lights', 'audio'].indexOf($formData.type) != -1}
+              {#if ['lights', 'audio'].indexOf($formData.type) !== -1}
                 <i class="fas fa-sun"></i> {$_('areas.settings.setup.periods.day', { default: 'Day settings' })}
               {:else}
                 <i class="fas fa-battery-empty"></i> {$_('areas.settings.setup.periods.low', { default: 'Low alarm' })}
               {/if}
             </a>
             <a class="nav-item nav-link" id="high-tab" data-toggle="tab" href="#high-tab-pane" role="tab" aria-controls="night">
-              {#if ['lights', 'audio'].indexOf($formData.type) != -1}
+              {#if ['lights', 'audio'].indexOf($formData.type) !== -1}
                 <i class="fas fa-moon"></i> {$_('areas.settings.setup.periods.night', { default: 'Night settings' })}
               {:else}
                 <i class="fas fa-battery-full"></i> {$_('areas.settings.setup.periods.high', { default: 'High alarm' })}
               {/if}
             </a>
-            {#if ['lights', 'audio'].indexOf($formData.type) == -1}
+            {#if ['lights', 'audio'].indexOf($formData.type) === -1}
               <a class="nav-item nav-link" id="variation-tab" data-toggle="tab" href="#area_variation" role="tab" aria-controls="high">
                 <i class="fas fa-exchange-alt"></i>
                 {$_('areas.settings.setup.periods.varation', { default: 'Variation' })}
@@ -785,14 +828,14 @@
         </nav>
         <div class="tab-content">
           <div class="tab-pane fade show active" id="low-tab-pane" role="tabpanel" aria-labelledby="low-tab">
-            <div class="row" class:d-none="{['timer', 'weather', 'weather_inverse'].indexOf($formData.mode) == -1}">
+            <div class="row" class:d-none="{['timer', 'weather', 'weather_inverse'].indexOf($formData.mode) === -1}">
               <div class="col">
                 <Field
                   type="time"
                   name="setup.low.begin"
-                  required="{$formData.mode == 'timer' &&
+                  required="{$formData.mode === 'timer' &&
                     ($formData.setup.low.relays?.length > 0 || $formData.setup.low.playlists?.length > 0)}"
-                  readonly="{$formData.mode != 'timer'}"
+                  readonly="{$formData.mode !== 'timer'}"
                   label="{$_('areas.settings.setup.low.begin.label', { default: 'Begin time' })}"
                   placeholder="{$_('areas.settings.setup.low.begin.placeholder', { default: 'Enter begin time' })}"
                   help="{$_('areas.settings.setup.low.begin.help', {
@@ -804,9 +847,9 @@
                 <Field
                   type="time"
                   name="setup.low.end"
-                  required="{$formData.mode == 'timer' &&
+                  required="{$formData.mode === 'timer' &&
                     ($formData.setup.low.relays?.length > 0 || $formData.setup.low.playlists?.length > 0)}"
-                  readonly="{$formData.mode != 'timer'}"
+                  readonly="{$formData.mode !== 'timer'}"
                   label="{$_('areas.settings.setup.low.end.label', { default: 'End time' })}"
                   placeholder="{$_('areas.settings.setup.low.end.placeholder', { default: 'Enter end time' })}"
                   help="{$_('areas.settings.setup.low.end.help', {
@@ -820,7 +863,7 @@
                   name="setup.low.on_duration"
                   step="0.1"
                   min="0"
-                  readonly="{$formData.mode != 'timer'}"
+                  readonly="{$formData.mode !== 'timer'}"
                   label="{$_('areas.settings.setup.low.on_duration.label', { default: 'On duration' })}"
                   placeholder="{$_('areas.settings.setup.low.on_duration.placeholder', { default: 'On duration' })}"
                   help="{$_('areas.settings.setup.low.on_duration.help', {
@@ -835,7 +878,7 @@
                   name="setup.low.off_duration"
                   step="0.1"
                   min="0"
-                  readonly="{$formData.mode != 'timer'}"
+                  readonly="{$formData.mode !== 'timer'}"
                   label="{$_('areas.settings.setup.low.off_duration.label', { default: 'Off duration' })}"
                   placeholder="{$_('areas.settings.setup.low.off_duration.placeholder', { default: 'Off duration' })}"
                   help="{$_('areas.settings.setup.low.off_duration.help', {
@@ -845,7 +888,7 @@
               </div>
             </div>
             <div class="row">
-              {#if ['lights', 'audio', 'watertank'].indexOf($formData.type) == -1}
+              {#if ['lights', 'audio', 'watertank'].indexOf($formData.type) === -1}
                 <div class="col">
                   <Field
                     type="number"
@@ -871,7 +914,7 @@
                     invalid="{$_('areas.settings.setup.low.settle_time.invalid', { default: 'Enter a valid number.' })}" />
                 </div>
               {/if}
-              {#if ['lights', 'audio', 'watertank'].indexOf($formData.type) == -1}
+              {#if ['lights', 'audio', 'watertank'].indexOf($formData.type) === -1}
                 <div class="col">
                   <Select
                     name="setup.low.light_status"
@@ -941,7 +984,7 @@
                     invalid="{$_('areas.settings.setup.low.playlists.invalid', { default: 'Please make a choice.' })}" />
                 </div>
               {:else}
-                <div class="col-12">
+              <div class="col-6">
                   <Select
                     name="setup.low.relays"
                     value="{$formData.setup?.low.relays ?? null}"
@@ -960,6 +1003,45 @@
                     help="{$_('areas.settings.setup.low.relays.help', { default: 'Select the relays to toggle.' })}"
                     invalid="{$_('areas.settings.setup.low.relays.invalid', { default: 'Please make a choice.' })}" />
                 </div>
+                <div class="col-4">
+                    <Select
+                      name="setup.low.depend_on_relays"
+                      value="{$formData.setup?.low.depend_on_relays ?? null}"
+                      multiple="{true}"
+                      sort="{true}"
+                      on:change="{(value) => $formData.setup.low.depend_on_relays = value.detail }"
+                      options="{relays.map((item) => {
+                        return { value: item.id, text: item.name, disabled: $formData.setup?.low.relays?.indexOf(item.id) !== -1 };
+                      })}"
+                      label="{$_('areas.settings.setup.low.depend_on_relays.label', { default: 'Depend on relays' })}"
+                      placeholder="{$_('areas.settings.setup.low.depend_on_relays.placeholder', { default: 'Select relays' })}"
+                      help="{$_('areas.settings.setup.low.depend_on_relays.help', { default: 'Select the relays of which these relays are depending on.' })}"
+                      invalid="{$_('areas.settings.setup.low.depend_on_relays.invalid', { default: 'Please make a choice.' })}" />
+                </div>
+                <div class="col-2">
+                    <Select
+                      name="setup.low.depend_on_relays_mode"
+                      value="{$formData.setup?.low.depend_on_relays_mode ?? null}"
+                      multiple="{false}"
+                      sort="{false}"
+                      required="{$formData.setup?.low?.depend_on_relays?.length > 0}"
+                      options="{[{
+                              value: 'all',
+                              text: $_('areas.settings.setup.depend_on_relays_mode.all.label', { default: 'All on' })
+                          },
+                          {
+                              value: 'one',
+                              text: $_('areas.settings.setup.depend_on_relays_mode.one.label', { default: 'At least one on' })
+                          },
+                          {
+                              value: 'none',
+                              text: $_('areas.settings.setup.depend_on_relays_mode.none.label', { default: 'None on' })
+                          }]}"
+                      label="{$_('areas.settings.setup.low.depend_on_relays_mode.label', { default: 'Depend mode' })}"
+                      placeholder="{$_('areas.settings.setup.low.depend_on_relays_mode.placeholder', { default: 'Select a mode' })}"
+                      help="{$_('areas.settings.setup.low.depend_on_relays_mode.help', { default: 'Select depending mode' })}"
+                      invalid="{$_('areas.settings.setup.low.depend_on_relays_mode.invalid', { default: 'Please make a choice.' })}" />
+                </div>
               {/if}
             </div>
 
@@ -971,7 +1053,7 @@
                       <li class="nav-item">
                         <a
                           class="nav-link"
-                          class:active="{index == 0}"
+                          class:active="{index === 0}"
                           id="{`relay_low_setting_${relay.id}-tab`}"
                           href="{`#relay_low_setting_${relay.id}`}"
                           data-toggle="tab"
@@ -987,8 +1069,8 @@
                   {#each $formData.setup.low.tweaks as relay, index}
                     <div
                       class="tab-pane fade"
-                      class:active="{index == 0}"
-                      class:show="{index == 0}"
+                      class:active="{index === 0}"
+                      class:show="{index === 0}"
                       id="{`relay_low_setting_${relay.id}`}"
                       role="tabpanel"
                       aria-labelledby="{`relay_low_setting_${relay.id}-tab`}">
@@ -1000,6 +1082,7 @@
                             horizontal="{true}"
                             required="{true}"
                             max=180
+                            formatter={formatter}
                             on:change="{updateTweakSliders}"
                             value="{tweakValue($formData.setup.low.tweaks[index].on, relayDimmer(relay.id) ? [0, 30] : 0)}"
                             label="{relayDimmer(relay.id)
@@ -1012,6 +1095,7 @@
                             horizontal="{true}"
                             required="{true}"
                             max=180
+                            formatter={formatter}
                             on:change="{updateTweakSliders}"
                             value="{tweakValue($formData.setup.low.tweaks[index].off, relayDimmer(relay.id) ? [0, 30] : 0)}"
                             label="{relayDimmer(relay.id)
@@ -1042,14 +1126,14 @@
             {/if}
           </div>
           <div class="tab-pane fade" id="high-tab-pane" role="tabpanel" aria-labelledby="high-tab">
-            <div class="row" class:d-none="{['timer', 'weather', 'weather_inverse'].indexOf($formData.mode) == -1}">
+            <div class="row" class:d-none="{['timer', 'weather', 'weather_inverse'].indexOf($formData.mode) === -1}">
               <div class="col">
                 <Field
                   type="time"
                   name="setup.high.begin"
-                  required="{$formData.mode == 'timer' &&
+                  required="{$formData.mode === 'timer' &&
                     ($formData.setup.high.relays?.length > 0 || $formData.setup.high.playlists?.length > 0)}"
-                  readonly="{$formData.mode != 'timer'}"
+                  readonly="{$formData.mode !== 'timer'}"
                   label="{$_('areas.settings.setup.high.begin.label', { default: 'Begin time' })}"
                   placeholder="{$_('areas.settings.setup.high.begin.placeholder', { default: 'Enter begin time' })}"
                   help="{$_('areas.settings.setup.high.begin.help', {
@@ -1061,9 +1145,9 @@
                 <Field
                   type="time"
                   name="setup.high.end"
-                  required="{$formData.mode == 'timer' &&
+                  required="{$formData.mode === 'timer' &&
                     ($formData.setup.high.relays?.length > 0 || $formData.setup.high.playlists?.length > 0)}"
-                  readonly="{$formData.mode != 'timer'}"
+                  readonly="{$formData.mode !== 'timer'}"
                   label="{$_('areas.settings.setup.high.end.label', { default: 'End time' })}"
                   placeholder="{$_('areas.settings.setup.high.end.placeholder', { default: 'Enter end time' })}"
                   help="{$_('areas.settings.setup.high.end.help', {
@@ -1077,7 +1161,7 @@
                   name="setup.high.on_duration"
                   step="0.1"
                   min="0"
-                  readonly="{$formData.mode != 'timer'}"
+                  readonly="{$formData.mode !== 'timer'}"
                   label="{$_('areas.settings.setup.high.on_duration.label', { default: 'On duration' })}"
                   placeholder="{$_('areas.settings.setup.high.on_duration.placeholder', { default: 'On duration' })}"
                   help="{$_('areas.settings.setup.high.on_duration.help', {
@@ -1092,7 +1176,7 @@
                   name="setup.high.off_duration"
                   step="0.1"
                   min="0"
-                  readonly="{$formData.mode != 'timer'}"
+                  readonly="{$formData.mode !== 'timer'}"
                   label="{$_('areas.settings.setup.high.off_duration.label', { default: 'Off duration' })}"
                   placeholder="{$_('areas.settings.setup.high.off_duration.placeholder', { default: 'Off duration' })}"
                   help="{$_('areas.settings.setup.high.off_duration.help', {
@@ -1103,7 +1187,7 @@
             </div>
 
             <div class="row">
-              {#if ['lights', 'audio', 'watertank'].indexOf($formData.type) == -1}
+              {#if ['lights', 'audio', 'watertank'].indexOf($formData.type) === -1}
                 <div class="col">
                   <Field
                     type="number"
@@ -1129,7 +1213,7 @@
                     invalid="{$_('areas.settings.setup.high.settle_time.invalid', { default: 'Enter a valid number.' })}" />
                 </div>
               {/if}
-              {#if ['lights', 'audio', 'watertank'].indexOf($formData.type) == -1}
+              {#if ['lights', 'audio', 'watertank'].indexOf($formData.type) === -1}
                 <div class="col">
                   <Select
                     name="setup.high.light_status"
@@ -1200,7 +1284,7 @@
                     invalid="{$_('areas.settings.setup.high.playlists.invalid', { default: 'Please make a choice.' })}" />
                 </div>
               {:else}
-                <div class="col-12">
+                <div class="col-6">
                   <Select
                     name="setup.high.relays"
                     value="{$formData.setup?.high.relays ?? null}"
@@ -1219,6 +1303,45 @@
                     help="{$_('areas.settings.setup.high.relays.help', { default: 'Select the relays to toggle.' })}"
                     invalid="{$_('areas.settings.setup.high.relays.invalid', { default: 'Please make a choice.' })}" />
                 </div>
+                <div class="col-4">
+                    <Select
+                      name="setup.high.depend_on_relays"
+                      value="{$formData.setup?.high.depend_on_relays ?? null}"
+                      multiple="{true}"
+                      sort="{true}"
+                      on:change="{(value) => $formData.setup.high.depend_on_relays = value.detail }"
+                      options="{relays.map((item) => {
+                        return { value: item.id, text: item.name, disabled: $formData.setup?.high.relays?.indexOf(item.id) !== -1 };
+                      })}"
+                      label="{$_('areas.settings.setup.high.depend_on_relays.label', { default: 'Depend on relays' })}"
+                      placeholder="{$_('areas.settings.setup.high.depend_on_relays.placeholder', { default: 'Select relays' })}"
+                      help="{$_('areas.settings.setup.high.depend_on_relays.help', { default: 'Select the relays of which these relays are depending on.' })}"
+                      invalid="{$_('areas.settings.setup.high.depend_on_relays.invalid', { default: 'Please make a choice.' })}" />
+                </div>
+                <div class="col-2">
+                    <Select
+                      name="setup.high.depend_on_relays_mode"
+                      value="{$formData.setup?.high.depend_on_relays_mode ?? null}"
+                      multiple="{false}"
+                      sort="{false}"
+                      required="{$formData.setup?.high?.depend_on_relays?.length > 0}"
+                      options="{[{
+                                value: 'all',
+                                text: $_('areas.settings.setup.depend_on_relays_mode.all.label', { default: 'All on' })
+                            },
+                            {
+                                value: 'one',
+                                text: $_('areas.settings.setup.depend_on_relays_mode.one.label', { default: 'At least one on' })
+                            },
+                            {
+                                value: 'none',
+                                text: $_('areas.settings.setup.depend_on_relays_mode.none.label', { default: 'None on' })
+                            }]}"
+                      label="{$_('areas.settings.setup.high.depend_on_relays_mode.label', { default: 'Depend mode' })}"
+                      placeholder="{$_('areas.settings.setup.high.depend_on_relays_mode.placeholder', { default: 'Select a mode' })}"
+                      help="{$_('areas.settings.setup.high.depend_on_relays_mode.help', { default: 'Select depending mode' })}"
+                      invalid="{$_('areas.settings.setup.high.depend_on_relays_mode.invalid', { default: 'Please make a choice.' })}" />
+                </div>
               {/if}
             </div>
             {#if $formData.setup?.high?.tweaks ?? false}
@@ -1229,7 +1352,7 @@
                       <li class="nav-item">
                         <a
                           class="nav-link"
-                          class:active="{index == 0}"
+                          class:active="{index === 0}"
                           id="{`relay_high_setting_${relay.id}-tab`}"
                           href="{`#relay_high_setting_${relay.id}`}"
                           data-toggle="tab"
@@ -1245,8 +1368,8 @@
                   {#each $formData.setup.high.tweaks as relay, index}
                     <div
                       class="tab-pane fade"
-                      class:active="{index == 0}"
-                      class:show="{index == 0}"
+                      class:active="{index === 0}"
+                      class:show="{index === 0}"
                       id="{`relay_high_setting_${relay.id}`}"
                       role="tabpanel"
                       aria-labelledby="{`relay_high_setting_${relay.id}-tab`}">
@@ -1258,6 +1381,7 @@
                             horizontal="{true}"
                             required="{true}"
                             max=180
+                            formatter={formatter}
                             on:change="{updateTweakSliders}"
                             value="{tweakValue($formData.setup.high.tweaks[index].on, relayDimmer(relay.id) ? [0, 30] : 0)}"
                             label="{relayDimmer(relay.id)
@@ -1270,6 +1394,7 @@
                             horizontal="{true}"
                             required="{true}"
                             max=180
+                            formatter={formatter}
                             on:change="{updateTweakSliders}"
                             value="{tweakValue($formData.setup.high.tweaks[index].off, relayDimmer(relay.id) ? [0, 30] : 0)}"
                             label="{relayDimmer(relay.id)
