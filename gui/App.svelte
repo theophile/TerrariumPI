@@ -66,7 +66,7 @@
   import ButtonFormModal from './modals/ButtonFormModal.svelte';
   import RelayFormModal from './modals/RelayFormModal.svelte';
   import SensorFormModal from './modals/SensorFormModal.svelte';
-  import WebcamFormModal from './modals/WebcamFormModal.svelte';
+  // import WebcamFormModal from './modals/WebcamFormModal.svelte';
   import EnclosureFormModal from './modals/EnclosureFormModal.svelte';
   import PlaylistFormModal from './modals/PlaylistFormModal.svelte';
   import AreaModal from './modals/AreaFormModal.svelte';
@@ -145,7 +145,7 @@
     editPlaylist: (item, cb) => newModal('new_playlist', item, cb),
     editRelay: (item, cb) => newModal('new_relay', item, cb),
     editSensor: (item, cb) => newModal('new_sensor', item, cb),
-    editWebcam: (item, cb) => newModal('new_webcam', item, cb),
+    // editWebcam: (item, cb) => newModal('new_webcam', item, cb),
     editService: (item, cb) => newModal('new_service', item, cb),
     editMessage: (item, cb) => newModal('new_message', item, cb),
   });
@@ -178,9 +178,9 @@
         editModelContent = SensorFormModal;
         break;
 
-      case 'new_webcam':
-        editModelContent = WebcamFormModal;
-        break;
+      //case 'new_webcam':
+      //  editModelContent = WebcamFormModal;
+      //  break;
 
       case 'new_service':
         editModelContent = ServiceModal;
@@ -439,6 +439,7 @@
                         <p>{$_(sub.title)}</p>
                       </a>
                     </li>
+                  <!--
                   {:else if ['new_button', 'new_relay', 'new_sensor', 'new_webcam', 'new_playlist', 'new_enclosure', 'new_area'].indexOf(sub.url) != -1}
                     <li class="nav-item">
                       <a href="{'#'}" class="nav-link" title="{$_(sub.title)}" on:click|preventDefault="{() => newModal(`${sub.url}`)}">
@@ -446,6 +447,7 @@
                         <p>{$_(sub.title)}</p>
                       </a>
                     </li>
+                  //-->
                   {:else if sub.subroutes && sub.subroutes.length > 0}
                     <SidebarNavTree icon="{sub.icon}" href="#{sub.url}">
                       {$_(sub.title)}

@@ -17,7 +17,7 @@ from func_timeout import func_timeout, FunctionTimedOut
 import re
 import math
 #import glob
-import cv2
+#import cv2
 
 # pip install retry
 from retry import retry

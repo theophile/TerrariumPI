@@ -10,10 +10,10 @@ import Weather from "./Weather.svelte";
 import Calendar from "./Calendar.svelte";
 import Sensors from "./Sensors.svelte";
 import Relays from "./Relays.svelte";
-import Buttons from "./Buttons.svelte";
-import Webcams from "./Webcams.svelte";
-import AudioFiles from "./Audiofiles.svelte";
-import Playlists from "./Playlists.svelte";
+// import Buttons from "./Buttons.svelte";
+// import Webcams from "./Webcams.svelte";
+// import AudioFiles from "./Audiofiles.svelte";
+// import Playlists from "./Playlists.svelte";
 import Enclosures from "./Enclosures.svelte";
 import Status from "./Status.svelte";
 import Settings from "./Settings.svelte";
@@ -145,6 +145,7 @@ export const Pages = [
       }
     ]
   },
+  /*
   {
     name: "Buttons",
     title: "buttons.menu.title",
@@ -234,6 +235,7 @@ export const Pages = [
       }
     ]
   },
+  */
   {
     name: "Enclosures",
     title: "enclosures.menu.title",
@@ -388,10 +390,10 @@ export default {
   ['/sensors/all/']: Sensors,
   ['/sensors/:type/']: Sensors,
   [PageUrls.Relays]: Relays,
-  [PageUrls.Buttons]: Buttons,
-  [PageUrls.Webcams]: Webcams,
-  [PageUrls.audio_files]: AudioFiles,
-  [PageUrls.playlists]: Playlists,
+//  [PageUrls.Buttons]: Buttons,
+//  [PageUrls.Webcams]: Webcams,
+//  [PageUrls.audio_files]: AudioFiles,
+//  [PageUrls.playlists]: Playlists,
   [PageUrls.Enclosures]: Enclosures,
   [PageUrls.system_status]: Status,
   [PageUrls.system_settings]: Settings,

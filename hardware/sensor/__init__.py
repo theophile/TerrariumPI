@@ -20,7 +20,7 @@ from gpiozero import MCP3008
 # For I2C sensors
 import smbus2
 # Bluetooth sensors
-from bluepy.btle import Scanner
+#from bluepy.btle import Scanner
 
 from terrariumUtils import terrariumUtils, terrariumCache, classproperty
 
@@ -522,6 +522,7 @@ class terrariumBluetoothSensor(terrariumSensor):
 
     return address
 
+  '''
   @staticmethod
   def _scan_bt_sensors(sensorclass, ids = [], unit_value_callback = None, trigger_callback = None):
     # Due to multiple bluetooth dongles, we are looping 10 times to see which devices can scan. Exit after first success
@@ -551,3 +552,4 @@ class terrariumBluetoothSensor(terrariumSensor):
       logger.warning('Bluetooth scanning is not enabled for normal users or there are zero Bluetooth LE devices available.... bluetooth is disabled!')
 
     return []
+    '''
