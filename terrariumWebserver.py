@@ -30,9 +30,9 @@ class terrariumWebserver(object):
   def __init__(self, terrariumEngine):
     # Define caching timeouts per url/path
     self.__caching_timeouts = [
-      {'path' : re.compile(r'^/webcam/.*\.m3u8$',re.I), 'timeout':                 2}, #  2 Seconds
-      {'path' : re.compile(r'^/webcam/.*\.ts$',re.I),   'timeout':                10}, # 10 Seconds
-      {'path' : re.compile(r'^/webcam/.*\.jpg$',re.I),  'timeout':                30}, # 30 Seconds
+      #{'path' : re.compile(r'^/webcam/.*\.m3u8$',re.I), 'timeout':                 2}, #  2 Seconds
+      #{'path' : re.compile(r'^/webcam/.*\.ts$',re.I),   'timeout':                10}, # 10 Seconds
+      #{'path' : re.compile(r'^/webcam/.*\.jpg$',re.I),  'timeout':                30}, # 30 Seconds
       {'path' : re.compile(r'^/api/',re.I),             'timeout':                60}, #  1 Minute
 
       {'path' : re.compile(r'^/(media|css|img|js|webfonts)/',re.I), 'timeout': 1 * 24 * 60 * 60}, # 1 Day
@@ -385,8 +385,8 @@ class terrariumWebsocket(object):
             logger.debug(f'Starting authenticated socket? {messages.authenticated}')
 
             threading.Thread(target=listen_for_messages, args=(messages, socket)).start()
-            for door in self.webserver.engine.load_doors():
-              self.send_message({'type' : 'button', 'data' : door}, messages)
+            #for door in self.webserver.engine.load_doors():
+            #  self.send_message({'type' : 'button', 'data' : door}, messages)
           else:
             self.clients[self.clients.index(messages)].authenticated = authenticated
 

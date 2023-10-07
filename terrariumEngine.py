@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from hardware.webcam.rpilive_webcam import terrariumRPILiveWebcam
+#from hardware.webcam.rpilive_webcam import terrariumRPILiveWebcam
 import terrariumLogging
 logger = terrariumLogging.logging.getLogger(__name__)
 
@@ -23,19 +23,19 @@ from packaging.version import Version
 from pyfancy.pyfancy import pyfancy
 
 from pony import orm
-from terrariumDatabase import init as init_db, db, Setting, Sensor, Relay, Button, Webcam, Enclosure
+from terrariumDatabase import init as init_db, db, Setting, Sensor, Relay, Enclosure
 from terrariumWebserver import terrariumWebserver
 from terrariumCalendar import terrariumCalendar
 from terrariumUtils import terrariumUtils, terrariumAsync
 from terrariumEnclosure import terrariumEnclosure
 from terrariumArea import terrariumArea
-from terrariumCloud import TerrariumMerossCloud
+#from terrariumCloud import TerrariumMerossCloud
 
 from weather import terrariumWeather
 from hardware.sensor import terrariumSensor, terrariumSensorLoadingException
 from hardware.relay import terrariumRelay, terrariumRelayLoadingException, terrariumRelayUpdateException
-from hardware.button import terrariumButton, terrariumButtonLoadingException
-from hardware.webcam import terrariumWebcam, terrariumWebcamLoadingException
+#from hardware.button import terrariumButton, terrariumButtonLoadingException
+#from hardware.webcam import terrariumWebcam, terrariumWebcamLoadingException
 
 from terrariumNotification import terrariumNotification
 
@@ -139,16 +139,16 @@ class terrariumEngine(object):
     logger.info(f'Loaded {len(self.relays)} relays in {time.time()-start:.2f} seconds.')
 
     # Loading buttons....
-    start = time.time()
-    logger.info('Loading existing buttons from database.')
-    self.__load_existing_buttons()
-    logger.info(f'Loaded {len(self.buttons)} buttons in {time.time()-start:.2f} seconds.')
+    #start = time.time()
+    #logger.info('Loading existing buttons from database.')
+    #self.__load_existing_buttons()
+    #logger.info(f'Loaded {len(self.buttons)} buttons in {time.time()-start:.2f} seconds.')
 
     # Loading webcams
-    start = time.time()
-    logger.info('Loading existing webcams from database.')
-    self.__load_existing_webcams()
-    logger.info(f'Loaded {len(self.webcams)} webcams in {time.time()-start:.2f} seconds.')
+    #start = time.time()
+    #logger.info('Loading existing webcams from database.')
+    #self.__load_existing_webcams()
+    #logger.info(f'Loaded {len(self.webcams)} webcams in {time.time()-start:.2f} seconds.')
 
     # Loading enclosures and areas
     start = time.time()
@@ -254,8 +254,8 @@ class terrariumEngine(object):
     os.environ['MEROSS_EMAIL']    = settings['meross_cloud_username']
     os.environ['MEROSS_PASSWORD'] = settings['meross_cloud_password']
 
-    # Make sure we use PiGPIO daemon for PWM
-    os.environ['GPIOZERO_PIN_FACTORY'] = 'pigpio'
+    # Make sure we use RPi.GPIO for PWM
+    os.environ['GPIOZERO_PIN_FACTORY'] = 'rpigpio'
 
     # Add some extra non DB settings
     settings['version'] = self.version
@@ -335,6 +335,7 @@ class terrariumEngine(object):
         # Force an update, due to maybe changing speed units or temperature.... lazy fix... :(
         self.weather.update()
 
+    '''
     # Loading Meross cloud
     if '' != settings['meross_cloud_username'] and '' != settings['meross_cloud_password'] and meross_login:
       logger.info('Loading Meross cloud connection.')
@@ -344,6 +345,7 @@ class terrariumEngine(object):
 
       self.meross_cloud = TerrariumMerossCloud(terrariumUtils.decrypt(settings['meross_cloud_username']),
                                                terrariumUtils.decrypt(settings['meross_cloud_password']))
+    '''
 
   # -=NEW=-
   def __update_checker(self):
@@ -370,17 +372,17 @@ class terrariumEngine(object):
 
   # -=NEW=-
   def add(self, item):
-    if isinstance(item, terrariumButton):
-      self.buttons[item.id] = item
+    #if isinstance(item, terrariumButton):
+    #  self.buttons[item.id] = item
 
-    elif isinstance(item, terrariumRelay):
+    if isinstance(item, terrariumRelay):
       self.relays[item.id] = item
 
     elif isinstance(item, terrariumSensor):
       self.sensors[item.id] = item
 
-    elif isinstance(item,terrariumWebcam):
-      self.webcams[item.id] = item
+    #elif isinstance(item,terrariumWebcam):
+    #  self.webcams[item.id] = item
 
     elif isinstance(item,terrariumEnclosure):
       self.enclosures[item.id] = item
@@ -394,6 +396,7 @@ class terrariumEngine(object):
   def update(self, item, **data):
     update_ok = False
 
+    '''
     if issubclass(item, terrariumButton):
       self.buttons[data['id']].address = data['address']
       self.buttons[data['id']].name    = data['name']
@@ -401,8 +404,9 @@ class terrariumEngine(object):
         self.buttons[data['id']].calibrate(data['calibration'])
 
       update_ok = True
+    '''
 
-    elif issubclass(item, terrariumRelay):
+    if issubclass(item, terrariumRelay):
       if data['id'] not in self.relays:
         return self.add(item)
 
@@ -419,22 +423,22 @@ class terrariumEngine(object):
       self.sensors[data['id']].name    = data['name']
       update_ok = True
 
-    elif issubclass(item, terrariumWebcam):
-      self.webcams[data['id']].address    = data['address']
-      self.webcams[data['id']].name       = data['name']
+    #elif issubclass(item, terrariumWebcam):
+    #  self.webcams[data['id']].address    = data['address']
+    #  self.webcams[data['id']].name       = data['name']
 
-      self.webcams[data['id']].resolution = (int(data['width']),int(data['height']))
-      self.webcams[data['id']].rotation   = data['rotation']
-      self.webcams[data['id']].awb        = data['awb']
+    #  self.webcams[data['id']].resolution = (int(data['width']),int(data['height']))
+    #  self.webcams[data['id']].rotation   = data['rotation']
+    #  self.webcams[data['id']].awb        = data['awb']
 
-      if isinstance(self.webcams[data['id']], terrariumRPILiveWebcam):
-        logger.info(f'Stopping webcam {self.webcams[data["id"]].name}')
-        self.webcams[data['id']].stop()
-        sleep(0.2)
-        self.webcams[data['id']].load_hardware()
-        logger.info(f'Started webcam {self.webcams[data["id"]].name} with new configuration.')
+    #  if isinstance(self.webcams[data['id']], terrariumRPILiveWebcam):
+    #    logger.info(f'Stopping webcam {self.webcams[data["id"]].name}')
+    #    self.webcams[data['id']].stop()
+    #    sleep(0.2)
+    #    self.webcams[data['id']].load_hardware()
+    #    logger.info(f'Started webcam {self.webcams[data["id"]].name} with new configuration.')
 
-      update_ok = True
+    #  update_ok = True
 
     elif issubclass(item, terrariumEnclosure):
       update_ok = True
@@ -452,12 +456,14 @@ class terrariumEngine(object):
   def delete(self, item, id, sub_id = None):
     delete_ok = False
 
+    '''
     if issubclass(item, terrariumButton):
       self.buttons[id].stop()
       del(self.buttons[id])
       delete_ok = True
+    '''
 
-    elif issubclass(item, terrariumRelay):
+    if issubclass(item, terrariumRelay):
       self.relays[id].stop()
       del(self.relays[id])
       delete_ok = True
@@ -467,10 +473,10 @@ class terrariumEngine(object):
       del(self.sensors[id])
       delete_ok = True
 
-    elif issubclass(item, terrariumWebcam):
-      self.webcams[id].stop()
-      del(self.webcams[id])
-      delete_ok = True
+    #elif issubclass(item, terrariumWebcam):
+    #  self.webcams[id].stop()
+    #  del(self.webcams[id])
+    #  delete_ok = True
 
     elif issubclass(item, terrariumArea):
       self.enclosures[sub_id].delete(id)
@@ -857,6 +863,7 @@ class terrariumEngine(object):
     if self.__engine['thread'] is not None and self.__engine['thread'].is_alive() and hasattr(self,'enclosures'):
       self._update_enclosures(True)
 
+  '''
   # -= NEW =-
   def __load_existing_buttons(self):
     self.buttons = {}
@@ -1033,6 +1040,7 @@ class terrariumEngine(object):
           relays = [] if webcam.flash is None else [self.relays[relay.id] for relay in webcam.flash if not relay.manual_mode]
           # Start update in parallel
           pool.submit(__process_webcam, self, webcam,current_state,relays)
+  '''
 
   # -= NEW =-
   def __load_existing_enclosures(self):
@@ -1089,7 +1097,7 @@ class terrariumEngine(object):
     while not self.__engine['exit'].is_set():
       self.__engine['systemd'].notify('WATCHDOG=1')
 
-      logger.info(f'Starting a new update round with {len(self.sensors)} sensors, {len(self.relays)} relays, {len(self.buttons)} buttons and {len(self.webcams)} webcams.')
+      logger.info(f'Starting a new update round with {len(self.sensors)} sensors and {len(self.relays)} relays.')
       start = time.time()
 
       # Weather data
@@ -1103,8 +1111,8 @@ class terrariumEngine(object):
       with futures.ThreadPoolExecutor() as pool:
         pool.submit(self._update_sensors)
         pool.submit(self._update_relays)
-        pool.submit(self._update_buttons)
-        pool.submit(self._update_webcams)
+      #  pool.submit(self._update_buttons)
+      #  pool.submit(self._update_webcams)
         pool.submit(self.__update_checker)
 
       # Run encounter/environment updates
@@ -1448,9 +1456,9 @@ class terrariumEngine(object):
       self.enclosures[enclosure].stop()
       logger.info(f'Stopped {self.enclosures[enclosure]}')
 
-    for button in self.buttons:
-      self.buttons[button].stop()
-      logger.info(f'Stopped {self.buttons[button]}')
+    #for button in self.buttons:
+    #  self.buttons[button].stop()
+    #  logger.info(f'Stopped {self.buttons[button]}')
 
     for sensor in self.sensors:
       self.sensors[sensor].stop()
@@ -1460,9 +1468,9 @@ class terrariumEngine(object):
       self.relays[relay].stop()
       logger.info(f'Stopped {self.relays[relay]}')
 
-    for webcam in self.webcams:
-      self.webcams[webcam].stop()
-      logger.info(f'Stopped {self.webcams[webcam]}')
+    #for webcam in self.webcams:
+    #  self.webcams[webcam].stop()
+    #  logger.info(f'Stopped {self.webcams[webcam]}')
 
     if self.meross_cloud is not None:
       self.meross_cloud.stop()
