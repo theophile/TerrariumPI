@@ -10,14 +10,15 @@ class terrariumScriptSensor(terrariumSensor):
   NAME     = 'Script sensor'
 
   def _load_hardware(self):
-    script = Path(self.address)
+    self.address_parsed = [part.strip() for part in self.address.split(',') if '' != part.strip()]
+    script = Path(self.address_parsed[0])
     if not script.exists():
-      raise terrariumSensorLoadingException(f'Invalid script location for sensor {self}: {self.address}')
+      raise terrariumSensorLoadingException(f'Invalid script location for sensor {self}: {script}')
 
     if oct(script.stat().st_mode)[-3:] not in ['777','775','755']:
-      raise terrariumSensorLoadingException(f'Script {self.address} for sensor {self} is not executable.')
+      raise terrariumSensorLoadingException(f'Script {script} for sensor {self} is not executable.')
 
-    return self.address
+    return self.address_parsed
 
   def _get_data(self):
     data = {}
