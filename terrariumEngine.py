@@ -94,7 +94,7 @@ class terrariumEngine(object):
         self.update_available = False
         self.weather = None
         # Dirty hack... :(
-        self.device = re.search(r"Model\s+:\s+(?P<device>.*)", Path("/proc/cpuinfo").read_text()).group("device")
+        self.device = Path("/proc/device-tree/model").read_text().rstrip('\x00')
         init_db(self.version)
 
         # Send message that startup is ready..... else the startup will wait until done.... can take more then 1 minute
@@ -282,9 +282,7 @@ class terrariumEngine(object):
 
         # Load device information
         try:
-            settings["device"] = re.search(r"Model\s+:\s+(?P<device>.*)", Path("/proc/cpuinfo").read_text()).group(
-                "device"
-            )
+            settings["device"] = self.device
         except Exception as ex:
             logger.debug(f"Error getting Pi info: {ex}")
             settings["device"] = "Unknown"
@@ -456,24 +454,22 @@ class terrariumEngine(object):
             self.sensors[data["id"]].name = data["name"]
             update_ok = True
 
-        '''
-        elif issubclass(item, terrariumWebcam):
-            self.webcams[data["id"]].address = data["address"]
-            self.webcams[data["id"]].name = data["name"]
+        #elif issubclass(item, terrariumWebcam):
+        #    self.webcams[data["id"]].address = data["address"]
+        #    self.webcams[data["id"]].name = data["name"]
 
-            self.webcams[data["id"]].resolution = (int(data["width"]), int(data["height"]))
-            self.webcams[data["id"]].rotation = data["rotation"]
-            self.webcams[data["id"]].awb = data["awb"]
+        #    self.webcams[data["id"]].resolution = (int(data["width"]), int(data["height"]))
+        #    self.webcams[data["id"]].rotation = data["rotation"]
+        #    self.webcams[data["id"]].awb = data["awb"]
 
-            if isinstance(self.webcams[data["id"]], terrariumRPILiveWebcam):
-                logger.info(f'Stopping webcam {self.webcams[data["id"]].name}')
-                self.webcams[data["id"]].stop()
-                sleep(0.2)
-                self.webcams[data["id"]].load_hardware()
-                logger.info(f'Started webcam {self.webcams[data["id"]].name} with new configuration.')
+        #    if isinstance(self.webcams[data["id"]], terrariumRPILiveWebcam):
+        #        logger.info(f'Stopping webcam {self.webcams[data["id"]].name}')
+        #        self.webcams[data["id"]].stop()
+        #        sleep(0.2)
+        #        self.webcams[data["id"]].load_hardware()
+        #        logger.info(f'Started webcam {self.webcams[data["id"]].name} with new configuration.')
 
-            update_ok = True
-        '''
+        #    update_ok = True
 
         elif issubclass(item, terrariumEnclosure):
             update_ok = True
@@ -511,13 +507,11 @@ class terrariumEngine(object):
                 del self.sensors[item_id]
             delete_ok = True
 
-        '''
-        elif issubclass(item, terrariumWebcam):
-            if item_id in self.webcams:
-                self.webcams[item_id].stop()
-                del self.webcams[item_id]
-            delete_ok = True
-        '''
+        #elif issubclass(item, terrariumWebcam):
+        #    if item_id in self.webcams:
+        #        self.webcams[item_id].stop()
+        #        del self.webcams[item_id]
+        #    delete_ok = True
 
         elif issubclass(item, terrariumArea):
             self.enclosures[sub_id].delete(item_id)
